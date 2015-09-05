@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="FZChatServerDatabase" Class="DataClassesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=DESKTOP-HB6UES1;Initial Catalog=FZChatServerDatabase;Integrated Security=True" SettingsObjectName="FZChatServer.Orm.Properties.Settings" SettingsPropertyName="FZChatServerDatabaseConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.user_friend" Member="UserFriend">
+    <Type Name="UserFriend">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="user_name" Member="UserName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="DatabaseUser_UserFriend" Member="DatabaseUser" Storage="_ServerUser" ThisKey="id" OtherKey="id" Type="DatabaseUser" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.user_server" Member="DatabaseUser">
+    <Type Name="DatabaseUser">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="user_name" Member="UserName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="nick_name" Member="NickName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="password" Member="Password" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="gender" Member="Gender" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="age" Member="Age" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="email" Member="Email" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="head" Member="Head" Type="System.Data.Linq.Binary" DbType="Image NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Association Name="DatabaseUser_UserFriend" Member="UserFriend" ThisKey="id" OtherKey="id" Type="UserFriend" />
+    </Type>
+  </Table>
+</Database>

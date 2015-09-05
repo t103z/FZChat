@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,6 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="View\ServerView.xaml.cs">
+      <DependentUpon>ServerView.xaml</DependentUpon>
+    </Compile>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -63,10 +67,28 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\ClientUser.cs" />
+    <Compile Include="Model\Interface\IMessageReceiver.cs" />
+    <Compile Include="Model\Interface\IMessageSender.cs" />
+    <Compile Include="Model\Message.cs" />
+    <Compile Include="Model\MessageReceiver.cs" />
+    <Compile Include="Model\MessageSender.cs" />
+    <Compile Include="Model\OnlineUser.cs" />
+    <Compile Include="Model\Server.cs" />
+    <Compile Include="Model\ServerUser.cs" />
+    <Compile Include="Model\IUser.cs" />
+    <Compile Include="Model\UserDatabase.cs" />
+    <Compile Include="Model\Utilities\ClientConnectedEventArgs.cs" />
+    <Compile Include="Model\Utilities\ConnectionLostEventArgs.cs" />
+    <Compile Include="Model\Utilities\MessageReceivedEventArgs.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\ServerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -96,8 +118,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\" />
     <Folder Include="ViewModel\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FZChatServer.Orm\FZChatServer.Orm.csproj">
+      <Project>{650b48aa-1c2f-4b6b-aa3b-85928853d5b6}</Project>
+      <Name>FZChatServer.Orm</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
