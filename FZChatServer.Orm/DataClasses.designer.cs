@@ -30,12 +30,18 @@ namespace FZChatServer.Orm
 		
     #region 可扩展性方法定义
     partial void OnCreated();
-    partial void InsertUserFriend(UserFriend instance);
-    partial void UpdateUserFriend(UserFriend instance);
-    partial void DeleteUserFriend(UserFriend instance);
     partial void InsertDatabaseUser(DatabaseUser instance);
     partial void UpdateDatabaseUser(DatabaseUser instance);
     partial void DeleteDatabaseUser(DatabaseUser instance);
+    partial void InsertDatabaseMessage(DatabaseMessage instance);
+    partial void UpdateDatabaseMessage(DatabaseMessage instance);
+    partial void DeleteDatabaseMessage(DatabaseMessage instance);
+    partial void InsertUserFriend(UserFriend instance);
+    partial void UpdateUserFriend(UserFriend instance);
+    partial void DeleteUserFriend(UserFriend instance);
+    partial void InsertDatabaseUserMessage(DatabaseUserMessage instance);
+    partial void UpdateDatabaseUserMessage(DatabaseUserMessage instance);
+    partial void DeleteDatabaseUserMessage(DatabaseUserMessage instance);
     #endregion
 		
 		public DataClassesDataContext() : 
@@ -68,6 +74,22 @@ namespace FZChatServer.Orm
 			OnCreated();
 		}
 		
+		public System.Data.Linq.Table<DatabaseUser> DatabaseUser
+		{
+			get
+			{
+				return this.GetTable<DatabaseUser>();
+			}
+		}
+		
+		public System.Data.Linq.Table<DatabaseMessage> DatabaseMessage
+		{
+			get
+			{
+				return this.GetTable<DatabaseMessage>();
+			}
+		}
+		
 		public System.Data.Linq.Table<UserFriend> UserFriend
 		{
 			get
@@ -76,138 +98,11 @@ namespace FZChatServer.Orm
 			}
 		}
 		
-		public System.Data.Linq.Table<DatabaseUser> DatabaseUser
+		public System.Data.Linq.Table<DatabaseUserMessage> DatabaseUserMessage
 		{
 			get
 			{
-				return this.GetTable<DatabaseUser>();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.user_friend")]
-	public partial class UserFriend : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _id;
-		
-		private string _UserName;
-		
-		private EntityRef<DatabaseUser> _ServerUser;
-		
-    #region 可扩展性方法定义
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnidChanging(int value);
-    partial void OnidChanged();
-    partial void OnUserNameChanging(string value);
-    partial void OnUserNameChanged();
-    #endregion
-		
-		public UserFriend()
-		{
-			this._ServerUser = default(EntityRef<DatabaseUser>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id
-		{
-			get
-			{
-				return this._id;
-			}
-			set
-			{
-				if ((this._id != value))
-				{
-					if (this._ServerUser.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnidChanging(value);
-					this.SendPropertyChanging();
-					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="user_name", Storage="_UserName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
-		public string UserName
-		{
-			get
-			{
-				return this._UserName;
-			}
-			set
-			{
-				if ((this._UserName != value))
-				{
-					this.OnUserNameChanging(value);
-					this.SendPropertyChanging();
-					this._UserName = value;
-					this.SendPropertyChanged("UserName");
-					this.OnUserNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_UserFriend", Storage="_ServerUser", ThisKey="id", OtherKey="id", IsForeignKey=true)]
-		public DatabaseUser DatabaseUser
-		{
-			get
-			{
-				return this._ServerUser.Entity;
-			}
-			set
-			{
-				DatabaseUser previousValue = this._ServerUser.Entity;
-				if (((previousValue != value) 
-							|| (this._ServerUser.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._ServerUser.Entity = null;
-						previousValue.UserFriend.Remove(this);
-					}
-					this._ServerUser.Entity = value;
-					if ((value != null))
-					{
-						value.UserFriend.Add(this);
-						this._id = value.id;
-					}
-					else
-					{
-						this._id = default(int);
-					}
-					this.SendPropertyChanged("DatabaseUser");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				return this.GetTable<DatabaseUserMessage>();
 			}
 		}
 	}
@@ -236,6 +131,8 @@ namespace FZChatServer.Orm
 		
 		private EntitySet<UserFriend> _UserFriend;
 		
+		private EntitySet<DatabaseUserMessage> _DatabaseUserMessage;
+		
     #region 可扩展性方法定义
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -261,6 +158,7 @@ namespace FZChatServer.Orm
 		public DatabaseUser()
 		{
 			this._UserFriend = new EntitySet<UserFriend>(new Action<UserFriend>(this.attach_UserFriend), new Action<UserFriend>(this.detach_UserFriend));
+			this._DatabaseUserMessage = new EntitySet<DatabaseUserMessage>(new Action<DatabaseUserMessage>(this.attach_DatabaseUserMessage), new Action<DatabaseUserMessage>(this.detach_DatabaseUserMessage));
 			OnCreated();
 		}
 		
@@ -424,7 +322,7 @@ namespace FZChatServer.Orm
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_UserFriend", Storage="_UserFriend", ThisKey="id", OtherKey="id")]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_user_friend", Storage="_UserFriend", ThisKey="id", OtherKey="User")]
 		public EntitySet<UserFriend> UserFriend
 		{
 			get
@@ -434,6 +332,19 @@ namespace FZChatServer.Orm
 			set
 			{
 				this._UserFriend.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_user_message", Storage="_DatabaseUserMessage", ThisKey="id", OtherKey="User")]
+		public EntitySet<DatabaseUserMessage> DatabaseUserMessage
+		{
+			get
+			{
+				return this._DatabaseUserMessage;
+			}
+			set
+			{
+				this._DatabaseUserMessage.Assign(value);
 			}
 		}
 		
@@ -467,6 +378,590 @@ namespace FZChatServer.Orm
 		{
 			this.SendPropertyChanging();
 			entity.DatabaseUser = null;
+		}
+		
+		private void attach_DatabaseUserMessage(DatabaseUserMessage entity)
+		{
+			this.SendPropertyChanging();
+			entity.DatabaseUser = this;
+		}
+		
+		private void detach_DatabaseUserMessage(DatabaseUserMessage entity)
+		{
+			this.SendPropertyChanging();
+			entity.DatabaseUser = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.message")]
+	public partial class DatabaseMessage : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private System.DateTime _Time;
+		
+		private string _Sender;
+		
+		private string _Receiver;
+		
+		private string _Type;
+		
+		private string _Content;
+		
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnTimeChanging(System.DateTime value);
+    partial void OnTimeChanged();
+    partial void OnSenderChanging(string value);
+    partial void OnSenderChanged();
+    partial void OnReceiverChanging(string value);
+    partial void OnReceiverChanged();
+    partial void OnTypeChanging(string value);
+    partial void OnTypeChanged();
+    partial void OnContentChanging(string value);
+    partial void OnContentChanged();
+    #endregion
+		
+		public DatabaseMessage()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="time", Storage="_Time", DbType="DateTime NOT NULL")]
+		public System.DateTime Time
+		{
+			get
+			{
+				return this._Time;
+			}
+			set
+			{
+				if ((this._Time != value))
+				{
+					this.OnTimeChanging(value);
+					this.SendPropertyChanging();
+					this._Time = value;
+					this.SendPropertyChanged("Time");
+					this.OnTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="sender", Storage="_Sender", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string Sender
+		{
+			get
+			{
+				return this._Sender;
+			}
+			set
+			{
+				if ((this._Sender != value))
+				{
+					this.OnSenderChanging(value);
+					this.SendPropertyChanging();
+					this._Sender = value;
+					this.SendPropertyChanged("Sender");
+					this.OnSenderChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="receiver", Storage="_Receiver", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string Receiver
+		{
+			get
+			{
+				return this._Receiver;
+			}
+			set
+			{
+				if ((this._Receiver != value))
+				{
+					this.OnReceiverChanging(value);
+					this.SendPropertyChanging();
+					this._Receiver = value;
+					this.SendPropertyChanged("Receiver");
+					this.OnReceiverChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="type", Storage="_Type", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string Type
+		{
+			get
+			{
+				return this._Type;
+			}
+			set
+			{
+				if ((this._Type != value))
+				{
+					this.OnTypeChanging(value);
+					this.SendPropertyChanging();
+					this._Type = value;
+					this.SendPropertyChanged("Type");
+					this.OnTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="content", Storage="_Content", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string Content
+		{
+			get
+			{
+				return this._Content;
+			}
+			set
+			{
+				if ((this._Content != value))
+				{
+					this.OnContentChanging(value);
+					this.SendPropertyChanging();
+					this._Content = value;
+					this.SendPropertyChanged("Content");
+					this.OnContentChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.user_friend")]
+	public partial class UserFriend : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _UserName;
+		
+		private System.Nullable<int> _User;
+		
+		private EntityRef<DatabaseUser> _DatabaseUser;
+		
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnUserNameChanging(string value);
+    partial void OnUserNameChanged();
+    partial void OnUserChanging(System.Nullable<int> value);
+    partial void OnUserChanged();
+    #endregion
+		
+		public UserFriend()
+		{
+			this._DatabaseUser = default(EntityRef<DatabaseUser>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="user_name", Storage="_UserName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string UserName
+		{
+			get
+			{
+				return this._UserName;
+			}
+			set
+			{
+				if ((this._UserName != value))
+				{
+					this.OnUserNameChanging(value);
+					this.SendPropertyChanging();
+					this._UserName = value;
+					this.SendPropertyChanged("UserName");
+					this.OnUserNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="user_connected", Storage="_User", DbType="Int")]
+		public System.Nullable<int> User
+		{
+			get
+			{
+				return this._User;
+			}
+			set
+			{
+				if ((this._User != value))
+				{
+					this.OnUserChanging(value);
+					this.SendPropertyChanging();
+					this._User = value;
+					this.SendPropertyChanged("User");
+					this.OnUserChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_user_friend", Storage="_DatabaseUser", ThisKey="User", OtherKey="id", IsForeignKey=true)]
+		public DatabaseUser DatabaseUser
+		{
+			get
+			{
+				return this._DatabaseUser.Entity;
+			}
+			set
+			{
+				DatabaseUser previousValue = this._DatabaseUser.Entity;
+				if (((previousValue != value) 
+							|| (this._DatabaseUser.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._DatabaseUser.Entity = null;
+						previousValue.UserFriend.Remove(this);
+					}
+					this._DatabaseUser.Entity = value;
+					if ((value != null))
+					{
+						value.UserFriend.Add(this);
+						this._User = value.id;
+					}
+					else
+					{
+						this._User = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("DatabaseUser");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.user_message")]
+	public partial class DatabaseUserMessage : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private System.DateTime _Time;
+		
+		private string _Sender;
+		
+		private string _Receiver;
+		
+		private string _Type;
+		
+		private string _Content;
+		
+		private System.Nullable<int> _User;
+		
+		private EntityRef<DatabaseUser> _DatabaseUser;
+		
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnTimeChanging(System.DateTime value);
+    partial void OnTimeChanged();
+    partial void OnSenderChanging(string value);
+    partial void OnSenderChanged();
+    partial void OnReceiverChanging(string value);
+    partial void OnReceiverChanged();
+    partial void OnTypeChanging(string value);
+    partial void OnTypeChanged();
+    partial void OnContentChanging(string value);
+    partial void OnContentChanged();
+    partial void OnUserChanging(System.Nullable<int> value);
+    partial void OnUserChanged();
+    #endregion
+		
+		public DatabaseUserMessage()
+		{
+			this._DatabaseUser = default(EntityRef<DatabaseUser>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="time", Storage="_Time", DbType="DateTime NOT NULL")]
+		public System.DateTime Time
+		{
+			get
+			{
+				return this._Time;
+			}
+			set
+			{
+				if ((this._Time != value))
+				{
+					this.OnTimeChanging(value);
+					this.SendPropertyChanging();
+					this._Time = value;
+					this.SendPropertyChanged("Time");
+					this.OnTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="sender", Storage="_Sender", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string Sender
+		{
+			get
+			{
+				return this._Sender;
+			}
+			set
+			{
+				if ((this._Sender != value))
+				{
+					this.OnSenderChanging(value);
+					this.SendPropertyChanging();
+					this._Sender = value;
+					this.SendPropertyChanged("Sender");
+					this.OnSenderChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="receiver", Storage="_Receiver", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string Receiver
+		{
+			get
+			{
+				return this._Receiver;
+			}
+			set
+			{
+				if ((this._Receiver != value))
+				{
+					this.OnReceiverChanging(value);
+					this.SendPropertyChanging();
+					this._Receiver = value;
+					this.SendPropertyChanged("Receiver");
+					this.OnReceiverChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="type", Storage="_Type", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string Type
+		{
+			get
+			{
+				return this._Type;
+			}
+			set
+			{
+				if ((this._Type != value))
+				{
+					this.OnTypeChanging(value);
+					this.SendPropertyChanging();
+					this._Type = value;
+					this.SendPropertyChanged("Type");
+					this.OnTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="content", Storage="_Content", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string Content
+		{
+			get
+			{
+				return this._Content;
+			}
+			set
+			{
+				if ((this._Content != value))
+				{
+					this.OnContentChanging(value);
+					this.SendPropertyChanging();
+					this._Content = value;
+					this.SendPropertyChanged("Content");
+					this.OnContentChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="user_connected", Storage="_User", DbType="Int")]
+		public System.Nullable<int> User
+		{
+			get
+			{
+				return this._User;
+			}
+			set
+			{
+				if ((this._User != value))
+				{
+					this.OnUserChanging(value);
+					this.SendPropertyChanging();
+					this._User = value;
+					this.SendPropertyChanged("User");
+					this.OnUserChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_user_message", Storage="_DatabaseUser", ThisKey="User", OtherKey="id", IsForeignKey=true)]
+		public DatabaseUser DatabaseUser
+		{
+			get
+			{
+				return this._DatabaseUser.Entity;
+			}
+			set
+			{
+				DatabaseUser previousValue = this._DatabaseUser.Entity;
+				if (((previousValue != value) 
+							|| (this._DatabaseUser.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._DatabaseUser.Entity = null;
+						previousValue.DatabaseUserMessage.Remove(this);
+					}
+					this._DatabaseUser.Entity = value;
+					if ((value != null))
+					{
+						value.DatabaseUserMessage.Add(this);
+						this._User = value.id;
+					}
+					else
+					{
+						this._User = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("DatabaseUser");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }

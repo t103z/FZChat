@@ -17,7 +17,7 @@ namespace FZChat.Model
         ERROR,
         INVALID
     }
-    public class Message
+    public class Message : ICloneable
     {
         private readonly MessageType _type;
         private readonly string _content = string.Empty;
@@ -25,13 +25,40 @@ namespace FZChat.Model
         private readonly string _receiver = string.Empty;
         private readonly DateTime _sendTime;
 
-        public Message(MessageType type, string content, string sender, string receiver)
+        public Message(MessageType type)
+        {
+            _type = type;
+            _sendTime = SendTime;
+        }
+
+        public Message(MessageType type, string content)
+        {
+            _sendTime = DateTime.Now;
+            _type = type;
+            _content = content;
+        }
+
+        public Message(MessageType type, string sender, string receiver, string content)
         {
             _type = type;
             _content = content;
             _sender = sender;
             _receiver = receiver;
             _sendTime = DateTime.Now;
+        }
+
+        public Message(MessageType type, DateTime sendTime, string sender, string receiver, string content)
+        {
+            _type = type;
+            _content = content;
+            _sender = sender;
+            _receiver = receiver;
+            _sendTime = sendTime;
+        }
+
+        public MessageType Type
+        {
+            get { return _type; }
         }
 
         public Message()
@@ -49,9 +76,14 @@ namespace FZChat.Model
             get { return _sendTime; }
         }
 
-        public string sender
+        public string Sender
         {
             get { return _sender; }
+        }
+
+        public string Receiver
+        {
+            get { return _receiver; }
         }
 
         public override string ToString()
@@ -66,8 +98,16 @@ namespace FZChat.Model
             {
                 sb.AppendFormat("{0}|", this._receiver);
             }
-            sb.AppendFormat("{0}|", this._content);
+            if (!string.IsNullOrEmpty(_content))
+            {
+                sb.AppendFormat("{0}|", this._content);
+            }
             return sb.ToString();
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

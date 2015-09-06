@@ -51,6 +51,7 @@ namespace FZChat.Model
                 {
                     remoteClient = listener.AcceptTcpClient();
                     ConnectionCount++;
+                    //启动新线程
                     Thread workThread = new Thread(new ThreadStart(ServiceClient));
                     workThread.Start();
                 }
@@ -71,6 +72,7 @@ namespace FZChat.Model
             bool keepConnect = true;
             Stream streamToClient = remoteClient.GetStream();
             byte[] buffer = new byte[8192];
+            //此循环监听一个客户端（通过一个线程）发来的消息
             while (OnService && keepConnect)
             {
                 //客户端未调用Dispose()退出，抛出异常，若调用后退出，则Read()持续返回0
@@ -84,7 +86,7 @@ namespace FZChat.Model
                     string msgString = Encoding.Unicode.GetString(buffer, 0, bytesRead);
                     if (MessageReceived != null)
                     {
-                        MessageReceived(this, new MessageReceivedEventArgs(msgString));
+                        MessageReceived(this, new MessageReceivedEventArgs(msgString, streamToClient, remoteClient));
                     }
                 }
                 catch
@@ -107,6 +109,22 @@ namespace FZChat.Model
                 listener = null;
             }
             catch { }
+        }
+
+        public bool SendMessage(Message msg, Stream streamToClient)
+        {
+            string msgString = msg.ToString();
+            byte[] buffer = Encoding.Unicode.GetBytes(msgString);
+            try
+            {
+                streamToClient.Write(buffer, 0, buffer.Length);
+                return true;
+            }
+            catch
+            {
+                return false;
+                throw;
+            }
         }
 
         //获取本机IP（待修改）

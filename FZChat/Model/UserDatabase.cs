@@ -32,7 +32,28 @@ namespace FZChat.Model
         }
         public void RemoveUser(string userName)
         {
-            dataContext.DatabaseUser.DeleteOnSubmit(dataContext.DatabaseUser.Single(u => u.UserName == userName));
+            var selectedUser = (from u in dataContext.DatabaseUser
+                                where u.UserName == userName
+                                select u).Single();
+            if (selectedUser.UserFriend.Count() > 0)
+            {
+                var selectedUserFriend = from f in selectedUser.UserFriend
+                                         select f;
+                foreach (UserFriend userFriend in selectedUserFriend)
+                {
+                    dataContext.UserFriend.DeleteOnSubmit(userFriend);
+                }
+            }
+            if (selectedUser.DatabaseUserMessage.Count() > 0)
+            {
+                var selectedMessage = from m in selectedUser.DatabaseUserMessage
+                                      select m;
+                foreach (DatabaseUserMessage msg in selectedMessage)
+                {
+                    dataContext.DatabaseUserMessage.DeleteOnSubmit(msg);
+                }
+            }
+            dataContext.DatabaseUser.DeleteOnSubmit(selectedUser);
             dataContext.SubmitChanges();
         }
         public void UpdateUser(string userName, ServerUser newUser)
@@ -66,13 +87,53 @@ namespace FZChat.Model
                 Age = selectedUser.Age,
                 Email = selectedUser.Email,
                 Gender = (GenderOption)Enum.Parse(typeof(GenderOption), selectedUser.Gender),
-                Password = selectedUser.Password
+                Password = selectedUser.Password,
+                FriendNames = new List<string>()
             };
             foreach (UserFriend userFriend in selectedUser.UserFriend)
             {
                 newServerUser.FriendNames.Add(userFriend.UserName);
             }
             return newServerUser;
+        }
+        public void AddUserMessage(string userName, Message msg)
+        {
+            DatabaseUser targetUser = (from u in dataContext.DatabaseUser
+                                       where u.UserName == userName
+                                       select u).Single();
+            DatabaseUserMessage newUserMessage = new DatabaseUserMessage()
+            {
+                Time = msg.SendTime,
+                Sender = msg.Sender,
+                Receiver = msg.Receiver,
+                Content = msg.Content,
+                Type = msg.Type.ToString()
+            };
+            targetUser.DatabaseUserMessage.Add(newUserMessage);
+            dataContext.SubmitChanges();
+        }
+
+        //获得用户离线消息并清空离线消息
+        public List<Message> FetchUserMessage(string userName)
+        {
+            List<Message> newUserMessages = new List<Message>();
+            var fetchedUser = (from u in dataContext.DatabaseUser
+                               where u.UserName == userName
+                               select u).Single();
+            var fetchedUserMessage = from m in fetchedUser.DatabaseUserMessage
+                                     select m;
+            foreach (DatabaseUserMessage msg in fetchedUserMessage)
+            {
+                MessageType msgType = (MessageType)Enum.Parse(typeof(MessageType), msg.Type);
+                Message newMessage = new Message(msgType, msg.Time, msg.Content, msg.Sender, msg.Receiver);
+                newUserMessages.Add(newMessage.Clone() as Message);
+            }
+            foreach (DatabaseUserMessage msg in fetchedUserMessage)
+            {
+                dataContext.DatabaseUserMessage.DeleteOnSubmit(msg);
+            }
+            dataContext.SubmitChanges();
+            return newUserMessages;
         }
     }
 }
