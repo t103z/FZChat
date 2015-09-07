@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Net;
 using System.IO;
+using System.Diagnostics;
 
 namespace FZChat.Model
 {
@@ -44,11 +45,13 @@ namespace FZChat.Model
             listener = new TcpListener(localIp, _port);
             listener.Start();
             OnService = true;
+            Debug.WriteLine("Starts listening ip: {0} port: {1}", localIp.ToString(), _port);
             //等待挂起连接请求
             do
             {
                 try
                 {
+                    Debug.WriteLine("Waiting for client...");
                     remoteClient = listener.AcceptTcpClient();
                     ConnectionCount++;
                     //启动新线程
@@ -69,8 +72,11 @@ namespace FZChat.Model
 
         private void ServiceClient()
         {
+            Debug.WriteLine("Client connected!");
             bool keepConnect = true;
-            Stream streamToClient = remoteClient.GetStream();
+            //TcpClient复制引用还是值？
+            TcpClient currentRemoteClient = remoteClient;
+            Stream streamToClient = currentRemoteClient.GetStream();
             byte[] buffer = new byte[8192];
             //此循环监听一个客户端（通过一个线程）发来的消息
             while (OnService && keepConnect)
@@ -86,7 +92,7 @@ namespace FZChat.Model
                     string msgString = Encoding.Unicode.GetString(buffer, 0, bytesRead);
                     if (MessageReceived != null)
                     {
-                        MessageReceived(this, new MessageReceivedEventArgs(msgString, streamToClient, remoteClient));
+                        MessageReceived(this, new MessageReceivedEventArgs(msgString, streamToClient, currentRemoteClient));
                     }
                 }
                 catch
@@ -135,9 +141,13 @@ namespace FZChat.Model
             {
                 return string.Empty;
             }
-            else if (addressList.Length < 3)
+            else if (addressList.Length < 2)
             {
                 return addressList[0].ToString();
+            }
+            else if (addressList.Length < 3)
+            {
+                return addressList[1].ToString();
             }
             else
             {

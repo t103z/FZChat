@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FZChat.Model.Utilities;
 
 namespace FZChat.Model
 {
@@ -14,6 +15,9 @@ namespace FZChat.Model
     {
         TcpClient client;
         Stream streamToServer;
+
+        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        public event EventHandler<ConnectionLostEventArgs> ConnectionLost;
 
         public bool Connect(IPAddress ip, int port)
         {
@@ -35,7 +39,35 @@ namespace FZChat.Model
 
         private void ServerResponse()
         {
-            throw new NotImplementedException();
+            while (true)
+            {
+                try
+                {
+                    byte[] buffer = new byte[8192];
+                    int bytesRead = streamToServer.Read(buffer, 0, 8192);
+                    if (bytesRead == 0)
+                    {
+                        throw new Exception("Connection lost!");
+                    }
+                    else
+                    {
+                        string msgString = Encoding.Unicode.GetString(buffer);
+                        if (MessageReceived != null)
+                        {
+                            MessageReceived(this, new MessageReceivedEventArgs(msgString));
+                        }
+                    }
+                }
+                catch
+                {
+                    if (ConnectionLost != null)
+                    {
+                        ConnectionLost(this, new ConnectionLostEventArgs());
+                    }
+                }
+                
+                
+            }
         }
 
         public bool SendMessage(Message msg)

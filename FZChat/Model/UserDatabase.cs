@@ -21,6 +21,7 @@ namespace FZChat.Model
                 Gender = user.Gender.ToString(),
                 Email = user.Email,
                 Age = user.Age,
+                Password = user.Password
             };
             foreach (string username in user.FriendNames)
             {

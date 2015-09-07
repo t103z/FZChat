@@ -13,7 +13,10 @@ namespace FZChat.Model
         PRIV,
         GROUP,
         LIST,
+        FRIEND,
+        FRIENDREQUEST,
         OK,
+        CHATROOM,
         ERROR,
         INVALID
     }
@@ -54,6 +57,21 @@ namespace FZChat.Model
             _sender = sender;
             _receiver = receiver;
             _sendTime = sendTime;
+        }
+
+        public Message(MessageType type, string sender, string content)
+        {
+            _type = type;
+            _sender = sender;
+            _content = content;
+        }
+
+        public Message(MessageType type, DateTime time, string sender, string content)
+        {
+            _type = type;
+            _sendTime = time;
+            _sender = sender;
+            _content = content;
         }
 
         public MessageType Type

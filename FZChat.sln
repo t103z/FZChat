@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FZChat", "FZChat\FZChat.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FZChatServer.Orm", "FZChatServer.Orm\FZChatServer.Orm.csproj", "{650B48AA-1C2F-4B6B-AA3B-85928853D5B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{190D074C-684A-45B4-BBC6-171FDADF3BC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{650B48AA-1C2F-4B6B-AA3B-85928853D5B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{650B48AA-1C2F-4B6B-AA3B-85928853D5B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{650B48AA-1C2F-4B6B-AA3B-85928853D5B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{190D074C-684A-45B4-BBC6-171FDADF3BC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{190D074C-684A-45B4-BBC6-171FDADF3BC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{190D074C-684A-45B4-BBC6-171FDADF3BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{190D074C-684A-45B4-BBC6-171FDADF3BC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

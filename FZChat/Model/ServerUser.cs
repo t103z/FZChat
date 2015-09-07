@@ -15,7 +15,7 @@ namespace FZChat.Model
         public string Email { get; set; }
         public int Head { get; set; }
         public string Password { get; set; }
-        public List<string> FriendNames;
+        public List<string> FriendNames = new List<string>();
 
         public object Clone()
         {

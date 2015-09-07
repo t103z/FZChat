@@ -104,6 +104,33 @@ namespace FZChat.Model
                     RespondInvalid(e);
                 }
             }
+
+            else if (msg.Type == MessageType.FRIEND)
+            {
+                if (database.ContainsUser(msg.Receiver))
+                {
+                    RespondOK(e);
+                }
+                else
+                {
+                    RespondInvalid(e);
+                }
+            }
+
+            else if (msg.Type == MessageType.FRIENDREQUEST)
+            {
+                FowardTo(e, msg.Receiver, msg);
+            }
+
+            else if (msg.Type == MessageType.PRIV)
+            {
+                FowardTo(e, msg.Receiver, msg);
+            }
+
+            //else if (msg.Type == MessageType.GROUP)
+            //{
+            //    FowardTo(e, msg.Receiver, msg);
+            //}
         }
 
         private void SendOfflineMessage(MessageReceivedEventArgs e, string userName)
@@ -151,6 +178,7 @@ namespace FZChat.Model
         private void AddUserToDatabase(UserDatabase database, string content)
         {
             //元数据content = username|password|nickname|gender|age|email|
+            //可能的错误：信息中带有“|”
             string[] tokens = content.Split(new char[] { '|' });
             ServerUser newUser = new ServerUser()
             {
@@ -176,7 +204,7 @@ namespace FZChat.Model
             else if (tokens[0].ToUpper() == "REGISTER")
             {
                 StringBuilder sb = new StringBuilder();
-                for (int i = 3; i < tokens.Length; i++)
+                for (int i = 2; i < tokens.Length; i++)
                 {
                     sb.AppendFormat("{0}|", tokens[i]);
                 }
@@ -184,12 +212,71 @@ namespace FZChat.Model
                     tokens[2], "", sb.ToString());
                 return msg;
             }
+            else if (tokens[0].ToUpper() == "FRIEND")
+            {
+                Message msg = new Message(MessageType.FRIEND, time, tokens[2], tokens[3]);
+                return msg;
+            }
+            else if (tokens[0].ToUpper() == "FRIENDREQUEST")
+            {
+                string sender = tokens[2];
+                string receiver = tokens[3];
+                string content = tokens[4];
+                Message msg = new Message(MessageType.FRIENDREQUEST, time, sender, receiver, content);
+                return msg;
+            }
+            else if (tokens[0].ToUpper() == "PRIV")
+            {
+                string sender = tokens[2];
+                string receiver = tokens[3];
+                string content = tokens[4];
+                Message msg = new Message(MessageType.PRIV, time, sender, receiver, content);
+                return msg;
+            }
+            else if (tokens[0].ToUpper() == "GROUP")
+            {
+                string sender = tokens[2];
+                string receiver = tokens[3];
+                string content = tokens[4];
+                Message msg = new Message(MessageType.GROUP, time, sender, receiver, content);
+                return msg;
+            }
+            else if (tokens[0].ToUpper() == "CHATROOM")
+            {
+                string sender = tokens[2];
+                StringBuilder sb = new StringBuilder();
+                for (int i = 3; i < tokens.Length; i++)
+                {
+                    sb.AppendFormat("{0}|", tokens[i]);
+                }
+                string content = sb.ToString();
+                Message msg = new Message(MessageType.CHATROOM, time, sender, content);
+                return msg;
+            }
+            
             //TODO: other circumstences
             else
             {
                 Message msg = new Message();
                 return msg;
             }
+        }
+
+        private void FowardTo(MessageReceivedEventArgs e, string userName, Message msg)
+        {
+            //检测用户是否在线
+            var users = from u in OnlineUsers
+                        where u.UserName == userName
+                        select u;
+            if (users.Count() == 0)
+            {
+                database.AddUserMessage(userName, msg);
+            }
+            else
+            {
+                receiver.SendMessage(msg, e.StreamToRemote);
+            }
+            
         }
     }
 }
