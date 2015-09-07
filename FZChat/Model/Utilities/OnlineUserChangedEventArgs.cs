@@ -8,11 +8,11 @@ namespace FZChat.Model.Utilities
 {
     public class OnlineUserChangedEventArgs : EventArgs
     {
-        public string UserName { get; set; }
+        public OnlineUser user { get; set; }
         public string Type { get; set; }
-        public OnlineUserChangedEventArgs(string userName, string type)
+        public OnlineUserChangedEventArgs(OnlineUser user, string type)
         {
-            this.UserName = userName;
+            this.user = user;
             this.Type = type;
         }
     }

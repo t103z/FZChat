@@ -84,15 +84,18 @@ namespace FZChat.Model
                 //客户端未调用Dispose()退出，抛出异常，若调用后退出，则Read()持续返回0
                 try
                 {
-                    int bytesRead = streamToClient.Read(buffer, 0, 8192);
-                    if (bytesRead == 0)
+                    lock (streamToClient)
                     {
-                        throw new Exception("客户端断开连接");
-                    }
-                    string msgString = Encoding.Unicode.GetString(buffer, 0, bytesRead);
-                    if (MessageReceived != null)
-                    {
-                        MessageReceived(this, new MessageReceivedEventArgs(msgString, streamToClient, currentRemoteClient));
+                        int bytesRead = streamToClient.Read(buffer, 0, 8192);
+                        if (bytesRead == 0)
+                        {
+                            throw new Exception("客户端断开连接");
+                        }
+                        string msgString = Encoding.Unicode.GetString(buffer, 0, bytesRead);
+                        if (MessageReceived != null)
+                        {
+                            MessageReceived(this, new MessageReceivedEventArgs(msgString, streamToClient, currentRemoteClient));
+                        }
                     }
                 }
                 catch

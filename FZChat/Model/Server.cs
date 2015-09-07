@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using FZChat.Model.Utilities;
 using System.Net;
+using System.Collections.ObjectModel;
 
 namespace FZChat.Model
 {
     public class Server
     {
         private MessageReceiver receiver;
-        public List<OnlineUser> OnlineUsers;
+        private List<OnlineUser> onlineUsers;
         private static UserDatabase database = new UserDatabase();
         public event EventHandler<OnlineUserChangedEventArgs> OnlineUserChanged;
 
@@ -54,8 +55,13 @@ namespace FZChat.Model
         public Server(int port)
         {
             this.receiver = new MessageReceiver(port);
-            OnlineUsers = new List<OnlineUser>();
+            onlineUsers = new List<OnlineUser>();
             receiver.MessageReceived += new EventHandler<MessageReceivedEventArgs>(ProcessMessage);
+        }
+
+        public void Stop()
+        {
+            receiver.StopListen();
         }
 
         private void ProcessMessage(object sender, MessageReceivedEventArgs e)
@@ -82,7 +88,7 @@ namespace FZChat.Model
             else if (msg.Type == MessageType.LOGIN)
             {
                 string userName = msg.Sender;
-                string password = msg.Receiver;
+                string password = msg.Content;
                 if (CheckIdentity(userName, password))
                 {
                     //回应ok
@@ -92,11 +98,12 @@ namespace FZChat.Model
                     //将用户加入在线用户表
                     ServerUser fetchedServerUser = database.GetUser(userName);
                     IPEndPoint endPoint = e.Remote.Client.RemoteEndPoint as IPEndPoint;
-                    OnlineUsers.Add(new OnlineUser(fetchedServerUser, endPoint));
+                    OnlineUser newOnlineUser = new OnlineUser(fetchedServerUser, endPoint);
+                    onlineUsers.Add(newOnlineUser);
                     //触发在线用户改变事件
                     if (OnlineUserChanged != null)
                     {
-                        OnlineUserChanged(this, new OnlineUserChangedEventArgs(userName, "online"));
+                        OnlineUserChanged(this, new OnlineUserChangedEventArgs(newOnlineUser, "online"));
                     }
                 }
                 else
@@ -265,7 +272,7 @@ namespace FZChat.Model
         private void FowardTo(MessageReceivedEventArgs e, string userName, Message msg)
         {
             //检测用户是否在线
-            var users = from u in OnlineUsers
+            var users = from u in onlineUsers
                         where u.UserName == userName
                         select u;
             if (users.Count() == 0)
@@ -277,6 +284,16 @@ namespace FZChat.Model
                 receiver.SendMessage(msg, e.StreamToRemote);
             }
             
+        }
+
+        public ObservableCollection<OnlineUser> GetOnlineUsers()
+        {
+            ObservableCollection<OnlineUser> obOnlineUsers = new ObservableCollection<OnlineUser>();
+            foreach (OnlineUser onlineUser in onlineUsers)
+            {
+                obOnlineUsers.Add(onlineUser);
+            }
+            return obOnlineUsers;
         }
     }
 }
