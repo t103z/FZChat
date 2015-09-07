@@ -1,9 +1,13 @@
 ﻿<Application x:Class="FZChat.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:FZChat"
-             StartupUri="MainWindow.xaml">
+             xmlns:local="clr-namespace:FZChat.View"
+             xmlns:viewmodel="clr-namespace:FZChat.ViewModel"
+             xmlns:converter="clr-namespace:FZChat.ViewModel.Converter"
+             StartupUri="View/ServerView.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <converter:ListenStartConverter x:Key="serverListenStartConverter"/>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
