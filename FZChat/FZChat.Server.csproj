@@ -56,6 +56,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\ServerChat.cs" />
     <Compile Include="Model\Utilities\OnlineUserChangedEventArgs.cs" />
     <Compile Include="ViewModel\Converter\ListenStartConverter.cs" />
     <Compile Include="ViewModel\ServerViewModel.cs" />
@@ -71,7 +72,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\ClientUser.cs" />
     <Compile Include="Model\Interface\IMessageReceiver.cs" />
     <Compile Include="Model\Interface\IMessageSender.cs" />
     <Compile Include="Model\Message.cs" />

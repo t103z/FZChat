@@ -10,8 +10,9 @@
       <Column Name="age" Member="Age" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="email" Member="Email" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="head" Member="Head" Type="System.Data.Linq.Binary" DbType="Image NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Association Name="DatabaseUser_user_friend" Member="UserFriend" ThisKey="id" OtherKey="User" Type="UserFriend" />
-      <Association Name="DatabaseUser_user_message" Member="DatabaseUserMessage" ThisKey="id" OtherKey="User" Type="DatabaseUserMessage" />
+      <Association Name="DatabaseUser_UserFriend" Member="UserFriend" ThisKey="id" OtherKey="User" Type="UserFriend" />
+      <Association Name="DatabaseUser_DatabaseUserMessage" Member="DatabaseUserMessage" ThisKey="id" OtherKey="User" Type="DatabaseUserMessage" />
+      <Association Name="DatabaseUser_DatabaseUserChat" Member="DatabaseUserChat" ThisKey="id" OtherKey="user_connected" Type="DatabaseUserChat" />
     </Type>
   </Table>
   <Table Name="dbo.message" Member="DatabaseMessage">
@@ -29,7 +30,7 @@
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="user_name" Member="UserName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="user_connected" Member="User" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="DatabaseUser_user_friend" Member="DatabaseUser" ThisKey="User" OtherKey="id" Type="DatabaseUser" IsForeignKey="true" />
+      <Association Name="DatabaseUser_UserFriend" Member="DatabaseUser" ThisKey="User" OtherKey="id" Type="DatabaseUser" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.user_message" Member="DatabaseUserMessage">
@@ -41,7 +42,31 @@
       <Column Name="type" Member="Type" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="content" Member="Content" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="user_connected" Member="User" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="DatabaseUser_user_message" Member="DatabaseUser" ThisKey="User" OtherKey="id" Type="DatabaseUser" IsForeignKey="true" />
+      <Association Name="DatabaseUser_DatabaseUserMessage" Member="DatabaseUser" ThisKey="User" OtherKey="id" Type="DatabaseUser" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.group_chat" Member="DatabaseGroupChat">
+    <Type Name="DatabaseGroupChat">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="chat_name" Member="ChatName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="chat_number" Member="ChatNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="DatabaseGroupChat_group_chat_user" Member="DatabaseGroupChatUser" ThisKey="id" OtherKey="group_chat_connected" Type="DatabaseGroupChatUser" />
+    </Type>
+  </Table>
+  <Table Name="dbo.user_group_chat" Member="DatabaseUserChat">
+    <Type Name="DatabaseUserChat">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="group_chat_number" Member="Number" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="user_connected" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="DatabaseUser_DatabaseUserChat" Member="DatabaseUser" ThisKey="user_connected" OtherKey="id" Type="DatabaseUser" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.group_chat_user" Member="DatabaseGroupChatUser">
+    <Type Name="DatabaseGroupChatUser">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="user_name" Member="UserName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="group_chat_connected" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="DatabaseGroupChat_group_chat_user" Member="DatabaseGroupChat" ThisKey="group_chat_connected" OtherKey="id" Type="DatabaseGroupChat" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

@@ -11,7 +11,7 @@ namespace FZChat.Model.Utilities
     public class MessageReceivedEventArgs : EventArgs
     {
         private string content;
-        private Stream streamToRemote;
+        private NetworkStream streamToRemote;
         private TcpClient remote;
 
         public string Content
@@ -20,7 +20,7 @@ namespace FZChat.Model.Utilities
             set { content = value; }
         }
 
-        public Stream StreamToRemote
+        public NetworkStream StreamToRemote
         {
             get { return streamToRemote; }
             set { streamToRemote = value; }
@@ -47,11 +47,10 @@ namespace FZChat.Model.Utilities
             content = msg;
         }
 
-        public MessageReceivedEventArgs(string msg, Stream stream, TcpClient remoteClient)
+        public MessageReceivedEventArgs(string msg, NetworkStream stream)
         {
             content = msg;
             streamToRemote = stream;
-            remote = remoteClient;
         }
     }
 }

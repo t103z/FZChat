@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 using FZChat.Model.Utilities;
 using System.Net;
 using System.Collections.ObjectModel;
+using System.Collections;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace FZChat.Model
 {
     public class Server
     {
         private MessageReceiver receiver;
-        private List<OnlineUser> onlineUsers;
+        //private List<OnlineUser> onlineUsers;
+        private static Hashtable onlineUsers = new Hashtable();
         private static UserDatabase database = new UserDatabase();
         public event EventHandler<OnlineUserChangedEventArgs> OnlineUserChanged;
 
@@ -55,7 +59,6 @@ namespace FZChat.Model
         public Server(int port)
         {
             this.receiver = new MessageReceiver(port);
-            onlineUsers = new List<OnlineUser>();
             receiver.MessageReceived += new EventHandler<MessageReceivedEventArgs>(ProcessMessage);
         }
 
@@ -95,15 +98,18 @@ namespace FZChat.Model
                     RespondOK(e);
                     //发送用户离线时收到的信息
                     SendOfflineMessage(e, userName);
+                    //发送用户好友列表
+                    SendFriendList(e, userName);
+                    //发送用户在线好友列表，发送给在线好友JOIN信息
+                    SendOnlineFriendList(e, userName);
                     //将用户加入在线用户表
                     ServerUser fetchedServerUser = database.GetUser(userName);
-                    IPEndPoint endPoint = e.Remote.Client.RemoteEndPoint as IPEndPoint;
-                    OnlineUser newOnlineUser = new OnlineUser(fetchedServerUser, endPoint);
-                    onlineUsers.Add(newOnlineUser);
+                    OnlineUser newOnlineUser = new OnlineUser(fetchedServerUser, e.StreamToRemote);
+                    onlineUsers.Add(userName, newOnlineUser);
                     //触发在线用户改变事件
                     if (OnlineUserChanged != null)
                     {
-                        OnlineUserChanged(this, new OnlineUserChangedEventArgs(newOnlineUser, "online"));
+                        OnlineUserChanged(this, new OnlineUserChangedEventArgs(newOnlineUser.UserName, "online"));
                     }
                 }
                 else
@@ -112,10 +118,47 @@ namespace FZChat.Model
                 }
             }
 
-            else if (msg.Type == MessageType.FRIEND)
+            else if (msg.Type == MessageType.FRIENDSEARCH)
             {
-                if (database.ContainsUser(msg.Receiver))
+                string[] keyWords = msg.Content.Split(new char[] { '|' });
+                string userName = keyWords[0];
+                string nickName = keyWords[1];
+                string gender = keyWords[2]; //注意此处gender为string以方便查询
+                int age = -1;
+                if (keyWords[3].Trim().ToLower() != "unlimited")
                 {
+                    age = int.Parse(keyWords[3].Trim());
+                }
+                List<ServerUser> usersFound = database.SearchUser(userName, nickName, gender, age);
+                if (usersFound.Count == 0)
+                {
+                    Message newMessage = new Message(MessageType.FRIENDSEARCH, "SERVER", "empty");
+                    FowardTo(e, msg.Sender, newMessage);
+                }
+                else
+                {
+                    StringBuilder sb = new StringBuilder();
+                    foreach (ServerUser userFound in usersFound)
+                    {
+                        string newUserName = userFound.UserName;
+                        string newNickName = userFound.NickName;
+                        string newGender = userFound.Gender.ToString();
+                        string newAge = userFound.Age.ToString();
+                        sb.AppendFormat("{0}|{1}|{2}|{3}|", newUserName, newNickName,
+                            newGender, newAge);
+                    }
+                    string newContent = sb.ToString();
+                    Message newMessage = new Message(MessageType.FRIENDSEARCH, "SERVER", newContent);
+                    FowardTo(e, msg.Sender, newMessage);
+                }
+            }
+            //私聊，转发给目标用户，写入总聊天记录
+            else if (msg.Type == MessageType.PRIV)
+            {
+                bool IsSuccess = FowardTo(e, msg.Receiver, msg);
+                if (IsSuccess)
+                {
+                    database.AddMessage(msg);
                     RespondOK(e);
                 }
                 else
@@ -123,21 +166,104 @@ namespace FZChat.Model
                     RespondInvalid(e);
                 }
             }
-
+            //群聊，获取群信息，写入总聊天记录，转发给目标用户
+            else if (msg.Type == MessageType.GROUP)
+            {
+                int chatNumber = int.Parse(msg.Receiver);
+                ServerChat targetChat = database.GetChat(chatNumber);
+                foreach (string userName in targetChat.ChatUserNames)
+                {
+                    if (userName != msg.Sender)
+                    {
+                        try
+                        {
+                            FowardTo(e, userName, msg);
+                        }
+                        catch
+                        {
+                            RespondInvalid(e);
+                        }
+                    }
+                }
+                database.AddMessage(msg);
+                RespondOK(e);
+            }
+            //用户离线
+            else if (msg.Type == MessageType.LEAVE)
+            {
+                string userName = msg.Sender;
+                OnlineUser currentUser = onlineUsers[userName] as OnlineUser;
+                //向在线好友发送离线消息
+                foreach (string friendName in currentUser.FriendNames)
+                {
+                    if (onlineUsers.Contains(friendName))
+                    {
+                        FowardTo(e, friendName, msg);
+                    }
+                }
+                //触发在线用户改变事件
+                if (OnlineUserChanged != null)
+                {
+                    OnlineUserChanged(this, 
+                        new OnlineUserChangedEventArgs(onlineUsers[userName] as OnlineUser, "offline"));
+                }
+                //是否要在此关闭用户连接？
+                //将用户移出在线用户列表
+                onlineUsers.Remove(userName);
+            }
+            //好友申请消息
             else if (msg.Type == MessageType.FRIENDREQUEST)
             {
-                FowardTo(e, msg.Receiver, msg);
+                bool IsSuccess = FowardTo(e, msg.Receiver, msg);
+                if (IsSuccess)
+                {
+                    database.AddMessage(msg);
+                    RespondOK(e);
+                }
+                else
+                {
+                    RespondInvalid(e);
+                }
             }
+        }
 
-            else if (msg.Type == MessageType.PRIV)
+        private void SendOnlineFriendList(MessageReceivedEventArgs e, string userName)
+        {
+            //格式ONLINELIST|time|SERVER|username1|username2|...
+            //注意为空的情况
+            StringBuilder sb = new StringBuilder();
+            OnlineUser currentUser = onlineUsers[userName] as OnlineUser;
+            foreach (string friendName in currentUser.FriendNames)
             {
-                FowardTo(e, msg.Receiver, msg);
+                if (onlineUsers.Contains(friendName))
+                {
+                    sb.AppendFormat("{0}|", friendName);
+                    //发送上线信息，格式为JOIN|time|username
+                    Message msgToFriend = new Message(MessageType.JOIN, userName, string.Empty);
+                    FowardTo(e, friendName, msgToFriend);
+                }
             }
+            string content = sb.ToString();
+            Message newMessage = new Message(MessageType.ONLINELIST, "SERVER", content);
+            FowardTo(e, userName, newMessage);
+        }
 
-            //else if (msg.Type == MessageType.GROUP)
-            //{
-            //    FowardTo(e, msg.Receiver, msg);
-            //}
+        private void SendFriendList(MessageReceivedEventArgs e, string userName)
+        {
+            //格式FRIENDLIST|time|SERVER|username1|nickname1|gender1|age1|email1|...
+            //注意为空的情况
+            StringBuilder sb = new StringBuilder();
+            OnlineUser currentUser = onlineUsers[userName] as OnlineUser;
+            foreach (string name in currentUser.FriendNames)
+            {
+                ServerUser currentFriend = database.GetUser(name);
+                sb.AppendFormat("{0}|{1}|{2}|{3}|{4}|", currentFriend.UserName,
+                    currentFriend.NickName, currentFriend.Gender.ToString(),
+                    currentFriend.Age, currentFriend.Email);
+            }
+            string content = sb.ToString();
+            Message newMessage = new Message(MessageType.FRIENDLIST, "SERVER", content);
+            FowardTo(e, userName, newMessage);
         }
 
         private void SendOfflineMessage(MessageReceivedEventArgs e, string userName)
@@ -149,6 +275,7 @@ namespace FZChat.Model
                 foreach (Message offlineMessage in offlineMessages)
                 {
                     receiver.SendMessage(offlineMessage, e.StreamToRemote);
+                    Thread.Sleep(50);   //防止流写入发生连续写入错误
                 }
             }
         }
@@ -205,7 +332,7 @@ namespace FZChat.Model
             DateTime time = DateTime.Parse(tokens[1]);
             if (tokens[0].ToUpper() == "LOGIN")
             {
-                Message msg = new Message(MessageType.LOGIN, time, tokens[2], "", tokens[3]);
+                Message msg = new Message(MessageType.LOGIN, time, tokens[2], tokens[3]);
                 return msg;
             }
             else if (tokens[0].ToUpper() == "REGISTER")
@@ -216,12 +343,19 @@ namespace FZChat.Model
                     sb.AppendFormat("{0}|", tokens[i]);
                 }
                 Message msg = new Message(MessageType.REGISTER, time,
-                    tokens[2], "", sb.ToString());
+                    tokens[2], sb.ToString());
                 return msg;
             }
-            else if (tokens[0].ToUpper() == "FRIEND")
+            else if (tokens[0].ToUpper() == "FRIENDSEARCH")
             {
-                Message msg = new Message(MessageType.FRIEND, time, tokens[2], tokens[3]);
+                string sender = tokens[2];
+                StringBuilder sb = new StringBuilder();
+                for (int i = 3; i < tokens.Length; i++)
+                {
+                    sb.AppendFormat("{0}|", tokens[i]);
+                }
+                Message msg = new Message(MessageType.FRIENDSEARCH, time, sender,
+                    sb.ToString());
                 return msg;
             }
             else if (tokens[0].ToUpper() == "FRIENDREQUEST")
@@ -248,16 +382,11 @@ namespace FZChat.Model
                 Message msg = new Message(MessageType.GROUP, time, sender, receiver, content);
                 return msg;
             }
-            else if (tokens[0].ToUpper() == "CHATROOM")
+            //离线格式：LEAVE|time|sender
+            else if (tokens[0].ToUpper() == "LEAVE")
             {
                 string sender = tokens[2];
-                StringBuilder sb = new StringBuilder();
-                for (int i = 3; i < tokens.Length; i++)
-                {
-                    sb.AppendFormat("{0}|", tokens[i]);
-                }
-                string content = sb.ToString();
-                Message msg = new Message(MessageType.CHATROOM, time, sender, content);
+                Message msg = new Message(MessageType.LEAVE, time, sender, "");
                 return msg;
             }
             
@@ -269,19 +398,20 @@ namespace FZChat.Model
             }
         }
 
-        private void FowardTo(MessageReceivedEventArgs e, string userName, Message msg)
+        private bool FowardTo(MessageReceivedEventArgs e, string userName, Message msg)
         {
             //检测用户是否在线
-            var users = from u in onlineUsers
-                        where u.UserName == userName
-                        select u;
-            if (users.Count() == 0)
+            if (!onlineUsers.Contains(userName))
             {
+                //不在线，写入用户离线信息
                 database.AddUserMessage(userName, msg);
+                return true;
             }
             else
             {
-                receiver.SendMessage(msg, e.StreamToRemote);
+                //在线，直接发送给目标用户
+                NetworkStream targetStream = (onlineUsers[userName] as OnlineUser).StreamToRemote;
+                return receiver.SendMessage(msg, targetStream);
             }
             
         }

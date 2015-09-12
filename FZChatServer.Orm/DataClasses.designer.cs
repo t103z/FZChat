@@ -42,6 +42,15 @@ namespace FZChatServer.Orm
     partial void InsertDatabaseUserMessage(DatabaseUserMessage instance);
     partial void UpdateDatabaseUserMessage(DatabaseUserMessage instance);
     partial void DeleteDatabaseUserMessage(DatabaseUserMessage instance);
+    partial void InsertDatabaseGroupChat(DatabaseGroupChat instance);
+    partial void UpdateDatabaseGroupChat(DatabaseGroupChat instance);
+    partial void DeleteDatabaseGroupChat(DatabaseGroupChat instance);
+    partial void InsertDatabaseUserChat(DatabaseUserChat instance);
+    partial void UpdateDatabaseUserChat(DatabaseUserChat instance);
+    partial void DeleteDatabaseUserChat(DatabaseUserChat instance);
+    partial void InsertDatabaseGroupChatUser(DatabaseGroupChatUser instance);
+    partial void UpdateDatabaseGroupChatUser(DatabaseGroupChatUser instance);
+    partial void DeleteDatabaseGroupChatUser(DatabaseGroupChatUser instance);
     #endregion
 		
 		public DataClassesDataContext() : 
@@ -105,6 +114,30 @@ namespace FZChatServer.Orm
 				return this.GetTable<DatabaseUserMessage>();
 			}
 		}
+		
+		public System.Data.Linq.Table<DatabaseGroupChat> DatabaseGroupChat
+		{
+			get
+			{
+				return this.GetTable<DatabaseGroupChat>();
+			}
+		}
+		
+		public System.Data.Linq.Table<DatabaseUserChat> DatabaseUserChat
+		{
+			get
+			{
+				return this.GetTable<DatabaseUserChat>();
+			}
+		}
+		
+		public System.Data.Linq.Table<DatabaseGroupChatUser> DatabaseGroupChatUser
+		{
+			get
+			{
+				return this.GetTable<DatabaseGroupChatUser>();
+			}
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.user_server")]
@@ -133,6 +166,8 @@ namespace FZChatServer.Orm
 		
 		private EntitySet<DatabaseUserMessage> _DatabaseUserMessage;
 		
+		private EntitySet<DatabaseUserChat> _DatabaseUserChat;
+		
     #region 可扩展性方法定义
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -159,6 +194,7 @@ namespace FZChatServer.Orm
 		{
 			this._UserFriend = new EntitySet<UserFriend>(new Action<UserFriend>(this.attach_UserFriend), new Action<UserFriend>(this.detach_UserFriend));
 			this._DatabaseUserMessage = new EntitySet<DatabaseUserMessage>(new Action<DatabaseUserMessage>(this.attach_DatabaseUserMessage), new Action<DatabaseUserMessage>(this.detach_DatabaseUserMessage));
+			this._DatabaseUserChat = new EntitySet<DatabaseUserChat>(new Action<DatabaseUserChat>(this.attach_DatabaseUserChat), new Action<DatabaseUserChat>(this.detach_DatabaseUserChat));
 			OnCreated();
 		}
 		
@@ -322,7 +358,7 @@ namespace FZChatServer.Orm
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_user_friend", Storage="_UserFriend", ThisKey="id", OtherKey="User")]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_UserFriend", Storage="_UserFriend", ThisKey="id", OtherKey="User")]
 		public EntitySet<UserFriend> UserFriend
 		{
 			get
@@ -335,7 +371,7 @@ namespace FZChatServer.Orm
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_user_message", Storage="_DatabaseUserMessage", ThisKey="id", OtherKey="User")]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_DatabaseUserMessage", Storage="_DatabaseUserMessage", ThisKey="id", OtherKey="User")]
 		public EntitySet<DatabaseUserMessage> DatabaseUserMessage
 		{
 			get
@@ -345,6 +381,19 @@ namespace FZChatServer.Orm
 			set
 			{
 				this._DatabaseUserMessage.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_DatabaseUserChat", Storage="_DatabaseUserChat", ThisKey="id", OtherKey="user_connected")]
+		public EntitySet<DatabaseUserChat> DatabaseUserChat
+		{
+			get
+			{
+				return this._DatabaseUserChat;
+			}
+			set
+			{
+				this._DatabaseUserChat.Assign(value);
 			}
 		}
 		
@@ -387,6 +436,18 @@ namespace FZChatServer.Orm
 		}
 		
 		private void detach_DatabaseUserMessage(DatabaseUserMessage entity)
+		{
+			this.SendPropertyChanging();
+			entity.DatabaseUser = null;
+		}
+		
+		private void attach_DatabaseUserChat(DatabaseUserChat entity)
+		{
+			this.SendPropertyChanging();
+			entity.DatabaseUser = this;
+		}
+		
+		private void detach_DatabaseUserChat(DatabaseUserChat entity)
 		{
 			this.SendPropertyChanging();
 			entity.DatabaseUser = null;
@@ -667,7 +728,7 @@ namespace FZChatServer.Orm
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_user_friend", Storage="_DatabaseUser", ThisKey="User", OtherKey="id", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_UserFriend", Storage="_DatabaseUser", ThisKey="User", OtherKey="id", IsForeignKey=true)]
 		public DatabaseUser DatabaseUser
 		{
 			get
@@ -910,7 +971,7 @@ namespace FZChatServer.Orm
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_user_message", Storage="_DatabaseUser", ThisKey="User", OtherKey="id", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_DatabaseUserMessage", Storage="_DatabaseUser", ThisKey="User", OtherKey="id", IsForeignKey=true)]
 		public DatabaseUser DatabaseUser
 		{
 			get
@@ -940,6 +1001,446 @@ namespace FZChatServer.Orm
 						this._User = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("DatabaseUser");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.group_chat")]
+	public partial class DatabaseGroupChat : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _ChatName;
+		
+		private int _ChatNumber;
+		
+		private EntitySet<DatabaseGroupChatUser> _DatabaseGroupChatUser;
+		
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnChatNameChanging(string value);
+    partial void OnChatNameChanged();
+    partial void OnChatNumberChanging(int value);
+    partial void OnChatNumberChanged();
+    #endregion
+		
+		public DatabaseGroupChat()
+		{
+			this._DatabaseGroupChatUser = new EntitySet<DatabaseGroupChatUser>(new Action<DatabaseGroupChatUser>(this.attach_DatabaseGroupChatUser), new Action<DatabaseGroupChatUser>(this.detach_DatabaseGroupChatUser));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="chat_name", Storage="_ChatName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string ChatName
+		{
+			get
+			{
+				return this._ChatName;
+			}
+			set
+			{
+				if ((this._ChatName != value))
+				{
+					this.OnChatNameChanging(value);
+					this.SendPropertyChanging();
+					this._ChatName = value;
+					this.SendPropertyChanged("ChatName");
+					this.OnChatNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="chat_number", Storage="_ChatNumber", DbType="Int NOT NULL")]
+		public int ChatNumber
+		{
+			get
+			{
+				return this._ChatNumber;
+			}
+			set
+			{
+				if ((this._ChatNumber != value))
+				{
+					this.OnChatNumberChanging(value);
+					this.SendPropertyChanging();
+					this._ChatNumber = value;
+					this.SendPropertyChanged("ChatNumber");
+					this.OnChatNumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseGroupChat_group_chat_user", Storage="_DatabaseGroupChatUser", ThisKey="id", OtherKey="group_chat_connected")]
+		public EntitySet<DatabaseGroupChatUser> DatabaseGroupChatUser
+		{
+			get
+			{
+				return this._DatabaseGroupChatUser;
+			}
+			set
+			{
+				this._DatabaseGroupChatUser.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_DatabaseGroupChatUser(DatabaseGroupChatUser entity)
+		{
+			this.SendPropertyChanging();
+			entity.DatabaseGroupChat = this;
+		}
+		
+		private void detach_DatabaseGroupChatUser(DatabaseGroupChatUser entity)
+		{
+			this.SendPropertyChanging();
+			entity.DatabaseGroupChat = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.user_group_chat")]
+	public partial class DatabaseUserChat : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private int _Number;
+		
+		private int _user_connected;
+		
+		private EntityRef<DatabaseUser> _DatabaseUser;
+		
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnNumberChanging(int value);
+    partial void OnNumberChanged();
+    partial void Onuser_connectedChanging(int value);
+    partial void Onuser_connectedChanged();
+    #endregion
+		
+		public DatabaseUserChat()
+		{
+			this._DatabaseUser = default(EntityRef<DatabaseUser>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="group_chat_number", Storage="_Number", DbType="Int NOT NULL")]
+		public int Number
+		{
+			get
+			{
+				return this._Number;
+			}
+			set
+			{
+				if ((this._Number != value))
+				{
+					this.OnNumberChanging(value);
+					this.SendPropertyChanging();
+					this._Number = value;
+					this.SendPropertyChanged("Number");
+					this.OnNumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_user_connected", DbType="Int NOT NULL")]
+		public int user_connected
+		{
+			get
+			{
+				return this._user_connected;
+			}
+			set
+			{
+				if ((this._user_connected != value))
+				{
+					if (this._DatabaseUser.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onuser_connectedChanging(value);
+					this.SendPropertyChanging();
+					this._user_connected = value;
+					this.SendPropertyChanged("user_connected");
+					this.Onuser_connectedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseUser_DatabaseUserChat", Storage="_DatabaseUser", ThisKey="user_connected", OtherKey="id", IsForeignKey=true)]
+		public DatabaseUser DatabaseUser
+		{
+			get
+			{
+				return this._DatabaseUser.Entity;
+			}
+			set
+			{
+				DatabaseUser previousValue = this._DatabaseUser.Entity;
+				if (((previousValue != value) 
+							|| (this._DatabaseUser.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._DatabaseUser.Entity = null;
+						previousValue.DatabaseUserChat.Remove(this);
+					}
+					this._DatabaseUser.Entity = value;
+					if ((value != null))
+					{
+						value.DatabaseUserChat.Add(this);
+						this._user_connected = value.id;
+					}
+					else
+					{
+						this._user_connected = default(int);
+					}
+					this.SendPropertyChanged("DatabaseUser");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.group_chat_user")]
+	public partial class DatabaseGroupChatUser : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _UserName;
+		
+		private int _group_chat_connected;
+		
+		private EntityRef<DatabaseGroupChat> _DatabaseGroupChat;
+		
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnUserNameChanging(string value);
+    partial void OnUserNameChanged();
+    partial void Ongroup_chat_connectedChanging(int value);
+    partial void Ongroup_chat_connectedChanged();
+    #endregion
+		
+		public DatabaseGroupChatUser()
+		{
+			this._DatabaseGroupChat = default(EntityRef<DatabaseGroupChat>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="user_name", Storage="_UserName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string UserName
+		{
+			get
+			{
+				return this._UserName;
+			}
+			set
+			{
+				if ((this._UserName != value))
+				{
+					this.OnUserNameChanging(value);
+					this.SendPropertyChanging();
+					this._UserName = value;
+					this.SendPropertyChanged("UserName");
+					this.OnUserNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_group_chat_connected", DbType="Int NOT NULL")]
+		public int group_chat_connected
+		{
+			get
+			{
+				return this._group_chat_connected;
+			}
+			set
+			{
+				if ((this._group_chat_connected != value))
+				{
+					if (this._DatabaseGroupChat.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Ongroup_chat_connectedChanging(value);
+					this.SendPropertyChanging();
+					this._group_chat_connected = value;
+					this.SendPropertyChanged("group_chat_connected");
+					this.Ongroup_chat_connectedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseGroupChat_group_chat_user", Storage="_DatabaseGroupChat", ThisKey="group_chat_connected", OtherKey="id", IsForeignKey=true)]
+		public DatabaseGroupChat DatabaseGroupChat
+		{
+			get
+			{
+				return this._DatabaseGroupChat.Entity;
+			}
+			set
+			{
+				DatabaseGroupChat previousValue = this._DatabaseGroupChat.Entity;
+				if (((previousValue != value) 
+							|| (this._DatabaseGroupChat.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._DatabaseGroupChat.Entity = null;
+						previousValue.DatabaseGroupChatUser.Remove(this);
+					}
+					this._DatabaseGroupChat.Entity = value;
+					if ((value != null))
+					{
+						value.DatabaseGroupChatUser.Add(this);
+						this._group_chat_connected = value.id;
+					}
+					else
+					{
+						this._group_chat_connected = default(int);
+					}
+					this.SendPropertyChanged("DatabaseGroupChat");
 				}
 			}
 		}

@@ -43,18 +43,21 @@ namespace FZChat.Model
             {
                 try
                 {
-                    byte[] buffer = new byte[8192];
-                    int bytesRead = streamToServer.Read(buffer, 0, 8192);
-                    if (bytesRead == 0)
+                    lock (streamToServer)
                     {
-                        throw new Exception("Connection lost!");
-                    }
-                    else
-                    {
-                        string msgString = Encoding.Unicode.GetString(buffer);
-                        if (MessageReceived != null)
+                        byte[] buffer = new byte[8192];
+                        int bytesRead = streamToServer.Read(buffer, 0, 8192);
+                        if (bytesRead == 0)
                         {
-                            MessageReceived(this, new MessageReceivedEventArgs(msgString));
+                            throw new Exception("Connection lost!");
+                        }
+                        else
+                        {
+                            string msgString = Encoding.Unicode.GetString(buffer);
+                            if (MessageReceived != null)
+                            {
+                                MessageReceived(this, new MessageReceivedEventArgs(msgString));
+                            }
                         }
                     }
                 }
@@ -74,9 +77,12 @@ namespace FZChat.Model
         {
             try
             {
-                byte[] buffer = Encoding.Unicode.GetBytes(msg.ToString());
-                streamToServer.Write(buffer, 0, buffer.Length);
-                return true;
+                lock (streamToServer)
+                {
+                    byte[] buffer = Encoding.Unicode.GetBytes(msg.ToString());
+                    streamToServer.Write(buffer, 0, buffer.Length);
+                    return true;
+                }
             }
             catch
             {

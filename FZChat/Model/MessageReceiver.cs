@@ -54,18 +54,18 @@ namespace FZChat.Model
                     Debug.WriteLine("Waiting for client...");
                     remoteClient = listener.AcceptTcpClient();
                     ConnectionCount++;
+                    if (ClientConnected != null)
+                    {
+                         ClientConnected(this, new ClientConnectedEventArgs(remoteClient));
+                    }
                     //启动新线程
                     Thread workThread = new Thread(new ThreadStart(ServiceClient));
                     workThread.Start();
                 }
                 catch
                 {
+                    Thread.Sleep(200);
                     continue;
-                }
-                if (ClientConnected != null)
-                {
-                    IPEndPoint endPoint = remoteClient.Client.RemoteEndPoint as IPEndPoint;
-                    ClientConnected(this, new ClientConnectedEventArgs(endPoint));
                 }
             } while (OnService);
         }
@@ -76,7 +76,7 @@ namespace FZChat.Model
             bool keepConnect = true;
             //TcpClient复制引用还是值？
             TcpClient currentRemoteClient = remoteClient;
-            Stream streamToClient = currentRemoteClient.GetStream();
+            NetworkStream streamToClient = currentRemoteClient.GetStream();
             byte[] buffer = new byte[8192];
             //此循环监听一个客户端（通过一个线程）发来的消息
             while (OnService && keepConnect)
@@ -94,7 +94,7 @@ namespace FZChat.Model
                         string msgString = Encoding.Unicode.GetString(buffer, 0, bytesRead);
                         if (MessageReceived != null)
                         {
-                            MessageReceived(this, new MessageReceivedEventArgs(msgString, streamToClient, currentRemoteClient));
+                            MessageReceived(this, new MessageReceivedEventArgs(msgString, streamToClient));
                         }
                     }
                 }
@@ -112,6 +112,7 @@ namespace FZChat.Model
 
         public void StopListen()
         {
+            OnService = false;
             try
             {
                 listener.Stop();
@@ -120,7 +121,7 @@ namespace FZChat.Model
             catch { }
         }
 
-        public bool SendMessage(Message msg, Stream streamToClient)
+        public bool SendMessage(Message msg, NetworkStream streamToClient)
         {
             string msgString = msg.ToString();
             byte[] buffer = Encoding.Unicode.GetBytes(msgString);

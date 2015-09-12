@@ -8,17 +8,22 @@ namespace FZChat.Model
 {
     public enum MessageType
     {
-        LOGIN,
-        REGISTER,
-        PRIV,
-        GROUP,
-        LIST,
-        FRIEND,
-        FRIENDREQUEST,
-        OK,
-        CHATROOM,
+        LOGIN,          //格式LOGIN|time|username|password
+        REGISTER,       //格式REGISTER|time|username|password|nickname|gender|age|email
+        PRIV,           //格式PRIV|time|sender|receiver|content
+        GROUP,          //GROUP|time|sender|groupnumber|content
+        JOIN,           //JOIN|time|username
+        LEAVE,          //LEAVE|time|username
+        ONLINELIST,     //ONLINELIST|time|SERVER|username1|username2|...
+        FRIENDLIST,     //FRIENDLIST|time|SERVER|username1|nickname1|gender1|age1|email1|...
+        FRIENDSEARCH,   //客户端发送FRIENDSEARCH|time|sender|username|nickname|gender|age 空缺写unlimited
+                        //服务端发送FRIENDSEARCH|time|SERVER|username1|nickname1|gender1|age1|... 未找到写empty
+        FRIENDREQUEST,  //FRIENDREQUEST|time|sender|receiver|content
+        OK,             //OK|time
+        CREATECHAT,     //CREATECHAT|time|sender|chatnumber|username1|username2|...
+        LEAVECHAT,      //LEAVECHAT|time|sender|chatnumber
         ERROR,
-        INVALID
+        INVALID         //INVALID|time
     }
     public class Message : ICloneable
     {
@@ -72,6 +77,12 @@ namespace FZChat.Model
             _sendTime = time;
             _sender = sender;
             _content = content;
+        }
+
+        public Message(MessageType type, DateTime time)
+        {
+            _type = type;
+            _sendTime = time;
         }
 
         public MessageType Type

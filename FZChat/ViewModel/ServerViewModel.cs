@@ -97,11 +97,11 @@ namespace FZChat.ViewModel
             if (e.Type.ToLower() == "online")
             {
                 //ObservableCollection为线程安全类型，故需要调用UI所在线程对其进行更改
-                this.Dispatcher.Invoke(new Action(() => onlineUsers.Add(e.user)));
+                this.Dispatcher.Invoke(new Action(() => onlineUsers.Add(e.User)));
             }
             else if (e.Type.ToLower() == "offline")
             {
-                this.Dispatcher.Invoke(new Action(() => onlineUsers.Remove(e.user)));
+                this.Dispatcher.Invoke(new Action(() => onlineUsers.Remove(e.User)));
             }
         }
 
