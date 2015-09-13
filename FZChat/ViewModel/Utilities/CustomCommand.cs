@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace FZChat.ViewModel.Utilities
 {
-    class CustomCommand : ICommand
+    public class CustomCommand : ICommand
     {
         private Action<object> execute;
         private Predicate<object> canExecute;

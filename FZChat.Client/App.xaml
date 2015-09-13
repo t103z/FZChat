@@ -2,8 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:FZChat.Client"
-             StartupUri="MainWindow.xaml">
+             xmlns:converter="clr-namespace:FZChat.Client.ViewModel.Converter"
+             StartupUri="View/MainWindow.xaml">
     <Application.Resources>
-         
+         <converter:GenderOptionConverter x:Key="GenderConvert"/>
     </Application.Resources>
 </Application>

@@ -1,0 +1,180 @@
+﻿<Window x:Name="WindowBasic" x:Class="FZChat.Client.View.Main"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FZ_view"
+        xmlns:viewmodel="clr-namespace:FZChat.Client.ViewModel"
+        mc:Ignorable="d"
+        Title="Main" Height="600" Width="850" Visibility="Visible" Background="{x:Null}" AllowsTransparency="True" WindowStyle="None" >
+    <Window.DataContext>
+        <viewmodel:MainViewModel></viewmodel:MainViewModel>
+    </Window.DataContext>
+    <Grid  Background="#FFE2E2E2" MaxWidth="1800" MaxHeight="900">
+        <Grid x:Name="TextWindow"  Background="#FFECECEC"  MouseLeftButtonDown="TextWindow_MouseLeftButtonDown" VerticalAlignment="Bottom" Height="203" Margin="0,0,226,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="8*"/>
+                <RowDefinition Height="35*"/>
+                <RowDefinition Height="8*"/>
+            </Grid.RowDefinitions>
+            <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="134" TextWrapping="Wrap" VerticalAlignment="Top" Width="616" Background="Transparent" BorderThickness="0" Grid.Row="1"/>
+            <Border x:Name="CloseWindow1" BorderBrush="#FFDADADA" BorderThickness="2" HorizontalAlignment="Right" Height="28" Margin="0,135,116,0" Grid.Row="1" VerticalAlignment="Top" Width="90" Background="#FFECECEC" MouseEnter="Border_MouseEnter_1" MouseLeave="CloseWindow1_MouseLeave" MouseLeftButtonDown="CloseWindow1_MouseLeftButtonDown" MouseLeftButtonUp="CloseWindow1_MouseLeftButtonUp" Grid.RowSpan="2">
+                <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="22" Margin="16,0,0,0" TextWrapping="Wrap" Text="关闭(C)" 
+        			VerticalAlignment="Bottom" Width="61" FontSize="16" Foreground="Gray"/>
+            </Border>
+            <Border x:Name="SendMessage" BorderBrush="#FFDADADA" BorderThickness="2" HorizontalAlignment="Right" Height="28" Margin="517,135,0,0" Grid.Row="1" VerticalAlignment="Top" Width="90" Background="#FFECECEC" MouseEnter="Border_MouseEnter_2" MouseLeave="SendMessage_MouseLeave" MouseLeftButtonDown="SendMessage_MouseLeftButtonDown" Grid.RowSpan="2">
+                <TextBlock x:Name="textBlock1" HorizontalAlignment="Right" Height="21" Margin="0,0,8,1" TextWrapping="Wrap" Text="发送(S)" 
+        			VerticalAlignment="Bottom" Width="60" FontSize="16" Foreground="Gray"/>
+            </Border>
+        </Grid>
+        <Grid Margin="624,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="124"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="226">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35*"/>
+                    <RowDefinition Height="39*"/>
+                    <RowDefinition Height="48*"/>
+                </Grid.RowDefinitions>
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF6B7E7B" Offset="0.217"/>
+                        <GradientStop Color="#FF1E2E2C" Offset="1"/>
+                        <GradientStop Color="#FFE2E2E2"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Grid HorizontalAlignment="Left" Height="36" VerticalAlignment="Top" Width="225" Margin="0,34,0,0" Grid.RowSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="73*"/>
+                        <ColumnDefinition Width="152*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="搜索" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="30" Margin="7,3,0,0" VerticalAlignment="Top" Width="170" CornerRadius="5" Background="#FFA9B2B0" Grid.ColumnSpan="2">
+                        <TextBox FontSize="17" Height="30" Margin="35,0,0,0" x:Name="finding" VerticalAlignment="Top" Foreground="White" 
+                             TabIndex="0" BorderThickness="0" BorderBrush="White" Text="{Binding UserName}" FontFamily="STSong" SelectionBrush="White">
+                            <TextBox.Resources>
+                                <VisualBrush x:Key="HelpBrush" TileMode="None" Opacity="0.3" Stretch="None" AlignmentX="Left">
+                                    <VisualBrush.Visual>
+                                        <TextBlock FontStyle="Italic" Text="搜索"/>
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </TextBox.Resources>
+                            <TextBox.Style>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource HelpBrush}"/>
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="">
+                                            <Setter Property="Background" Value="{StaticResource HelpBrush}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </Border>
+                </Grid>
+                <Path Fill="#FF2A4F4F" Stroke="Black" Margin="10,5,189.877,10.25" Stretch="Fill" Grid.Row="1" StrokeThickness="0">
+                    <Path.Data>
+                        <GeometryGroup>
+                            <EllipseGeometry Center="20,40" RadiusX="20" RadiusY="40"/>
+                            <EllipseGeometry Center="20,40" RadiusX="10" RadiusY="20"/>
+                        </GeometryGroup>
+                    </Path.Data>
+                </Path>
+                <Canvas HorizontalAlignment="Left" Height="20" Margin="192,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="19">
+                    <Path x:Name="groupchatbutton" Fill="#FFBFBCBC" Stroke="Black" Stretch="Fill" StrokeThickness="0" Data="M22,22 L22,0 L28,0 L28,22 L50,22 L50,28 L28,28 L28,50 L22,50 L22,28 L0,28 L0,22 z" Height="17.949" Width="18.015" Canvas.Top="2.051" RenderTransformOrigin="1.591,1.263" MouseEnter="Path_MouseEnter_2" MouseLeave="groupchatbutton_MouseLeave" MouseLeftButtonDown="groupchatbutton_MouseLeftButtonDown_1" MouseLeftButtonUp="groupchatbutton_MouseLeftButtonUp_1"/>
+                </Canvas>
+                <Grid HorizontalAlignment="Left" Height="35" Margin="96,0,0,0" VerticalAlignment="Top" Width="129">
+
+                    <Border x:Name="WindowsClose" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="35" Margin="101,0,0,0" VerticalAlignment="Top" Width="28" MouseEnter="WindowsClose_MouseEnter" MouseLeave="WindowsClose_MouseLeave" MouseLeftButtonDown="WindowsClose_MouseLeftButtonDown" MouseLeftButtonUp="WindowsClose_MouseLeftButtonUp">
+                        <Label x:Name="CloseWindow" Content="×" HorizontalAlignment="Left" Height="34" VerticalAlignment="Top" Width="28" Background="{x:Null}" FontSize="21.333" FontWeight="Bold" Margin="0,1,0,0"/>
+                    </Border>
+                    <Border x:Name="WindowsMin" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="35" Margin="70,1,0,-1" VerticalAlignment="Top" Width="26" MouseEnter="Border_MouseEnter" MouseLeave="WindowsMin_MouseLeave" MouseLeftButtonDown="WindowsMin_MouseLeftButtonDown" MouseLeftButtonUp="WindowsMin_MouseLeftButtonUp">
+                        <Label x:Name="label2" Content="-" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="20" Background="{x:Null}" FontSize="21.333" Margin="2,0,0,0"/>
+                    </Border>
+                </Grid>
+                <Grid HorizontalAlignment="Left" Height="49" Margin="1,0,0,0" Grid.Row="2" VerticalAlignment="Top" Width="224">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="56*"/>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="57*"/>
+                        <ColumnDefinition Width="51*"/>
+                    </Grid.ColumnDefinitions>
+                    <Canvas HorizontalAlignment="Left" Height="47" Margin="0,2,0,0" VerticalAlignment="Top" Width="49" OpacityMask="#FFC7C5C5">
+                        <Path x:Name="ChatButton" Fill="#0000FFFF" Stroke="#FFBFBCBC" Height="37.323" Canvas.Top="6" Width="45.333" Stretch="Fill" StrokeThickness="1.5" MouseLeftButtonUp="Path_MouseLeftButtonUp" MouseLeftButtonDown="Path_MouseLeftButtonDown" MouseEnter="ChatButton_MouseEnter" MouseLeave="ChatButton_MouseLeave" Canvas.Left="2">
+                            <Path.Data>
+                                <CombinedGeometry GeometryCombineMode="Union" Geometry2="M34,25 L15,34 L46,30 z">
+                                    <CombinedGeometry.Geometry1>
+                                        <EllipseGeometry Center="50,25" RadiusX="30" RadiusY="10"/>
+                                    </CombinedGeometry.Geometry1>
+                                </CombinedGeometry>
+                            </Path.Data>
+                        </Path>
+                    </Canvas>
+                    <Canvas HorizontalAlignment="Left" Height="47" VerticalAlignment="Top" Width="54" Grid.Column="1" Margin="0,2,0,0">
+                        <Path x:Name="LinkmanButton" Fill="#0000FFFF" Stroke="#FFBFBCBC" Stretch="Fill" Height="39.368" Width="45.966" Canvas.Top="3" StrokeThickness="1.5" MouseLeftButtonUp="Path_MouseLeftButtonUp_1" MouseLeftButtonDown="Path_MouseLeftButtonDown_1" MouseEnter="LinkmanButton_MouseEnter" MouseLeave="LinkmanButton_MouseLeave" Canvas.Left="1.017">
+                            <Path.Data>
+                                <CombinedGeometry GeometryCombineMode="Union" Geometry2="M35,30 L65,30 L63,43 L65,46 L87,55 L87,60 L13,60 L13,55 L35,46 L37,43 z" >
+                                    <CombinedGeometry.Geometry1>
+                                        <EllipseGeometry Center="50,25" RadiusX="20" RadiusY="20"/>
+                                    </CombinedGeometry.Geometry1>
+
+                                </CombinedGeometry>
+                            </Path.Data>
+                        </Path>
+
+                        <Path Fill="#FFBFBCBC" Stroke="#FFBFBCBC" Canvas.Left="52.119" Canvas.Top="17.782" Height="5.937" Stretch="Fill" Width="1.754" RenderTransformOrigin="0.5,0.5" Data="M126,40 L125.1,40 z" StrokeThickness="1.5"/>
+                        <Path Fill="Cyan" Stroke="#FFBFBCBC" Canvas.Left="52.119" Canvas.Top="23.969" Height="6.312" Stretch="Fill" Width="1.675" Data="M126,60 L125.5,60 z" StrokeThickness="1.5"/>
+                        <Path Fill="Cyan" Stroke="#FFBFBCBC" Canvas.Left="52.238" Canvas.Top="30.312" Height="4.984" Stretch="Fill" Width="1.762" RenderTransformOrigin="0.674,0.876" Data="M126,80 L125.9,80 z" StrokeThickness="1.5"/>
+                    </Canvas>
+                    <Canvas Grid.Column="3" HorizontalAlignment="Left" Height="49" VerticalAlignment="Top" Width="47">
+                        <Path x:Name="Finding1" Height="38.958" Width="38.916" Stroke="#FFBFBCBC" StrokeThickness="1.5" Stretch="Fill" MouseEnter="Path_MouseEnter_1" MouseLeave="Path_MouseLeave" MouseLeftButtonDown="Path_MouseLeftButtonDown_2" MouseLeftButtonUp="Path_MouseLeftButtonUp_3" Canvas.Left="7.542" Canvas.Top="4.021">
+                            <Path.Fill>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FF3E504D" Offset="0.209"/>
+                                    <GradientStop Color="#FF30413F" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Path.Fill>
+                            <Path.Data>
+                                <CombinedGeometry GeometryCombineMode="Union" Geometry2="M28,43 L40,55 L41,54">
+                                    <CombinedGeometry.Geometry1>
+                                        <EllipseGeometry Center="9,24" RadiusX="18" RadiusY="18"/>
+                                    </CombinedGeometry.Geometry1>
+
+                                </CombinedGeometry>
+                            </Path.Data>
+                        </Path>
+                    </Canvas>
+                    <Canvas HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="42" Grid.Column="2" Margin="13,4,0,0">
+                        <Path x:Name="SetButton" Stroke="Black" Stretch="Fill" StrokeThickness="0" Height="38.326" Canvas.Top="3" Width="37.355" Fill="#FFBFBCBC" MouseEnter="Path_MouseEnter" MouseLeave="SetButton_MouseLeave" Canvas.Left="0.5" Data="M13,13 L13,23 L20,30 L30,30 L50,50 L55,45 L35,25 L35,15 L28,8 L18,8 L28,18 L23,23 z" MouseLeftButtonUp="SetButton_MouseLeftButtonUp" MouseLeftButtonDown="SetButton_MouseLeftButtonDown"/>
+                    </Canvas>
+                </Grid>
+            </Grid>
+            <Grid x:Name="Grid1" Background="#FF1E2E2C" HorizontalAlignment="Right" Width="226" Margin="0,123,0,0" Grid.RowSpan="2"/>
+
+            <Grid x:Name="Grid2" Margin="0,0,0,-1" Background="#FF1E2E2C" Grid.Row="1"/>
+        </Grid>
+        
+        <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="788" MouseDown="Border_MouseDown" Background="#00E2E2E2"/>
+        <ListView x:Name="listView" HorizontalAlignment="Left" Height="392" VerticalAlignment="Top" Width="624"
+                  Background="{x:Null}" ItemsSource="{Binding TestViewItems}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel Height="80">
+                        <Grid DockPanel.Dock="{Binding DockProperty}" Width="120">
+                            <Rectangle Fill="Blue" Width="120">
+                                
+                            </Rectangle>
+                        </Grid>
+                        <Grid></Grid>
+                    </DockPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            
+        </ListView>
+
+
+    </Grid>
+</Window>

@@ -35,8 +35,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.2.0.37222, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.2.0.37222, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.2.0.37226, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,6 +76,42 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\Converter\GenderOptionConverter.cs" />
+    <Compile Include="ViewModel\CreatGroup.cs" />
+    <Compile Include="ViewModel\FindPasswordViewModel.cs" />
+    <Compile Include="ViewModel\Messages\LogInMessage.cs" />
+    <Compile Include="ViewModel\RegisterViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\PopupWindowViewModel.cs" />
+    <Compile Include="ViewModel\Service\ClientDataService.cs" />
+    <Compile Include="ViewModel\SetWindowViewModel.cs" />
+    <Compile Include="ViewModel\TestItem.cs" />
+    <Compile Include="ViewModel\Utilities\Messenger.cs" />
+    <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\PasswordBoxMonitor.cs" />
+    <Compile Include="View\PopupWindow1.xaml.cs">
+      <DependentUpon>PopupWindow1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SetWindow.xaml.cs">
+      <DependentUpon>SetWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="View\CreatGroup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\FindPassword.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Register.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Main.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -75,10 +132,31 @@
     <Compile Include="ViewModel\ClientUser.cs" />
     <Compile Include="ViewModel\GroupChat.cs" />
     <Compile Include="ViewModel\PrivateChat.cs" />
+    <Compile Include="View\App.xaml.cs" />
+    <Compile Include="View\CreatGroup.xaml.cs">
+      <DependentUpon>CreatGroup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FindPassword.xaml.cs">
+      <DependentUpon>FindPassword.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Register.xaml.cs">
+      <DependentUpon>Register.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Main.xaml.cs">
+      <DependentUpon>Main.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\PopupWindow1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SetWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -98,6 +176,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -107,7 +186,28 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="View\FZ_view.csproj" />
+    <Resource Include="View\resource\1.jpg" />
+    <Resource Include="View\resource\10.jpg" />
+    <Resource Include="View\resource\11.jpg" />
+    <Resource Include="View\resource\12.jpg" />
+    <Resource Include="View\resource\13.jpg" />
+    <Resource Include="View\resource\14.jpg" />
+    <Resource Include="View\resource\16.jpg" />
+    <Resource Include="View\resource\2.jpg" />
+    <Resource Include="View\resource\3.jpg" />
+    <Resource Include="View\resource\4.jpg" />
+    <Resource Include="View\resource\5.jpg" />
+    <Resource Include="View\resource\6.jpg" />
+    <Resource Include="View\resource\7.jpg" />
+    <Resource Include="View\resource\8.jpg" />
+    <Resource Include="View\resource\9.jpg" />
+    <Resource Include="View\resource\BACKGROND1.jpg" />
+    <Resource Include="View\resource\gamersky_19origin_37_2013914011A16.jpg" />
+    <Resource Include="View\resource\yyy.jpg" />
+    <Resource Include="View\resource\未标题-1.jpg" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FZChatServer.Orm\FZChatServer.Orm.csproj">
       <Project>{650b48aa-1c2f-4b6b-aa3b-85928853d5b6}</Project>
@@ -118,6 +218,7 @@
       <Name>FZChat.Server</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

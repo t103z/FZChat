@@ -70,6 +70,7 @@ namespace FZChat.Model
             _type = type;
             _sender = sender;
             _content = content;
+            _sendTime = DateTime.Now;
         }
 
         public Message(MessageType type, DateTime time, string sender, string content)

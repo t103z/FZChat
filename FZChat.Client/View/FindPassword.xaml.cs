@@ -13,45 +13,22 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Navigation;
 using System.Diagnostics;
-using FZChat.Client.ViewModel;
 
 namespace FZChat.Client.View
 {
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    /// FindPassword.xaml 的交互逻辑
     /// </summary>
-
-    public partial class MainWindow : Window
+    public partial class FindPassword : Window
     {
-        public MainWindow()
+        public FindPassword()
         {
             InitializeComponent();
-            this.DataContext = new MainWindowViewModel(this.Close);
-        }
-
-        private void checkBox_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void checkBox1_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void buttonSign_MouseEnter(object sender, MouseEventArgs e)
-        {
- 
-        }
-
-        private void buttonSign_MouseLeave(object sender, MouseEventArgs e)
-        {
-
         }
 
         private void closebutton_MouseEnter(object sender, MouseEventArgs e)
         {
-            closebutton.Background = new SolidColorBrush(Color.FromArgb(255 , 255, 0, 0));
+            closebutton.Background = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
         }
 
         private void closebutton_MouseLeave(object sender, MouseEventArgs e)
@@ -71,7 +48,7 @@ namespace FZChat.Client.View
 
         private void minbutton_MouseEnter(object sender, MouseEventArgs e)
         {
-            minbutton.Background = new SolidColorBrush(Color.FromArgb(120   , 120, 80,80 ));
+            minbutton.Background = new SolidColorBrush(Color.FromArgb(120, 120, 80, 80));
         }
 
         private void minbutton_MouseLeave(object sender, MouseEventArgs e)
@@ -89,9 +66,9 @@ namespace FZChat.Client.View
             this.WindowState = WindowState.Minimized;
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
+        private void okborder_MouseEnter(object sender, MouseEventArgs e)
         {
-            new FindPassword().Show();
+            okborder.BorderThickness = new Thickness(2);
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -99,10 +76,6 @@ namespace FZChat.Client.View
             this.DragMove();
         }
 
-        private void pb_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            if (this.DataContext != null)
-            { ((dynamic)this.DataContext).Password = ((PasswordBox)sender).Password; }
-        }
+
     }
 }

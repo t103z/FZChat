@@ -28,6 +28,7 @@ namespace FZChat.Model
                 streamToServer = client.GetStream();
                 //应当把ServerResponse放到其他类中
                 Thread workThread = new Thread(new ThreadStart(ServerResponse));
+                workThread.IsBackground = true;
                 workThread.Start();
                 return true;
             }
@@ -77,12 +78,9 @@ namespace FZChat.Model
         {
             try
             {
-                lock (streamToServer)
-                {
-                    byte[] buffer = Encoding.Unicode.GetBytes(msg.ToString());
-                    streamToServer.Write(buffer, 0, buffer.Length);
-                    return true;
-                }
+                byte[] buffer = Encoding.Unicode.GetBytes(msg.ToString());
+                streamToServer.Write(buffer, 0, buffer.Length);
+                return true;
             }
             catch
             {
