@@ -67,7 +67,9 @@
     <Compile Include="Model\Utilities\FriendInformationEventArgs.cs" />
     <Compile Include="Model\Utilities\FriendRequestEventArgs.cs" />
     <Compile Include="Model\Utilities\GroupMessageEventArgs.cs" />
+    <Compile Include="Model\Utilities\NewChatEventArgs.cs" />
     <Compile Include="Model\Utilities\PrivateMessageEventArgs.cs" />
+    <Compile Include="Model\Utilities\UserLeaveChatEventArgs.cs" />
     <Compile Include="ViewModel\Chat.cs" />
     <Compile Include="ViewModel\ChatLog.cs" />
     <Compile Include="ViewModel\ClientUser.cs" />

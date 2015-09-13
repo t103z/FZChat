@@ -20,7 +20,8 @@ namespace FZChat.Model
                         //服务端发送FRIENDSEARCH|time|SERVER|username1|nickname1|gender1|age1|... 未找到写empty
         FRIENDREQUEST,  //FRIENDREQUEST|time|sender|receiver|content
         OK,             //OK|time
-        CREATECHAT,     //CREATECHAT|time|sender|chatnumber|username1|username2|...
+        CREATECHAT,     //CREATECHAT|time|sender|chatname|username1|username2|...
+                        //服务端发送CREATECHAT|time|sender|chatnumber|username1|username2|...
         LEAVECHAT,      //LEAVECHAT|time|sender|chatnumber
         ERROR,
         INVALID         //INVALID|time

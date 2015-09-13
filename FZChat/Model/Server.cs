@@ -225,6 +225,84 @@ namespace FZChat.Model
                     RespondInvalid(e);
                 }
             }
+
+            else if (msg.Type == MessageType.CREATECHAT)
+            {
+                ServerChat newChat = new ServerChat(msg.Receiver);
+                string[] tokens = msg.Content.Split(new char[] { '|' });
+                foreach (string token in tokens)
+                {
+                    newChat.AddUserName(token.Trim());
+                }
+                //在数据库中创建群聊
+                try
+                {
+                    database.AddChat(newChat);
+                }
+                catch
+                {
+                    RespondInvalid(e);
+                }
+                //将信息转发给群聊参与者
+                StringBuilder sb = new StringBuilder();
+                sb.AppendFormat("{0}|", newChat.ChatNumber.ToString());
+                foreach (string user in tokens)
+                {
+                    sb.AppendFormat("{0}|", user);
+                }
+                Message msgToClient = new Message(MessageType.CREATECHAT, msg.SendTime, 
+                    msg.Sender, sb.ToString());
+                bool IsSuccess = true;
+                foreach (string userName in newChat.ChatUserNames)
+                {
+                    if (userName != msg.Sender)
+                    {
+                        IsSuccess = FowardTo(e, userName, msgToClient);
+                    }
+                }
+                //回应
+                if (IsSuccess)
+                {
+                    RespondOK(e);
+                }
+                else
+                {
+                    RespondOK(e);
+                }
+            }
+
+            else if (msg.Type == MessageType.LEAVECHAT)
+            {
+                int chatNumber = int.Parse(msg.Content);
+                string userName = msg.Sender;
+                //在数据库中更新群聊信息
+                try
+                {
+                    database.DeleteChatUser(chatNumber, userName);
+                }
+                catch
+                {
+                    RespondInvalid(e);
+                }
+                //向群聊者推送离开信息
+                ServerChat currentChat = database.GetChat(chatNumber);
+                bool IsSuccess = true;
+                foreach (string name in currentChat.ChatUserNames)
+                {
+                    if (name != userName)
+                    {
+                        IsSuccess = FowardTo(e, name, msg);
+                    }
+                }
+                if (IsSuccess)
+                {
+                    RespondOK(e);
+                }
+                else
+                {
+                    RespondOK(e);
+                }
+            }
         }
 
         private void SendOnlineFriendList(MessageReceivedEventArgs e, string userName)
@@ -389,6 +467,27 @@ namespace FZChat.Model
                 Message msg = new Message(MessageType.LEAVE, time, sender, "");
                 return msg;
             }
+
+            else if (tokens[0].ToUpper() == "CREATECHAT")
+            {
+                string sender = tokens[2];
+                string chatName = tokens[3];
+                StringBuilder sb = new StringBuilder();
+                for (int i = 4; i < tokens.Length; i++)
+                {
+                    sb.AppendFormat("{0}|", tokens[i]);
+                }
+                Message msg = new Message(MessageType.CREATECHAT, time, sender, chatName, sb.ToString());
+                return msg;
+            }
+
+            else if (tokens[0].ToUpper() == "LEAVECHAT")
+            {
+                string sender = tokens[2];
+                string chatNumber = tokens[3];
+                Message msg = new Message(MessageType.LEAVECHAT, time, sender, chatNumber);
+                return msg;
+            }    
             
             //TODO: other circumstences
             else

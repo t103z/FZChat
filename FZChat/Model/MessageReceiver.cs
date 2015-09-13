@@ -41,7 +41,8 @@ namespace FZChat.Model
         private void ListenThreadMethod()
         {
             //开始对本机IP和给定端口的监听
-            IPAddress localIp = IPAddress.Parse(this.GetServerIPAddress());
+            //IPAddress localIp = IPAddress.Parse(this.GetServerIPAddress());
+            IPAddress localIp = IPAddress.Parse("127.0.0.1");
             listener = new TcpListener(localIp, _port);
             listener.Start();
             OnService = true;

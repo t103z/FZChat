@@ -10,6 +10,7 @@ namespace FZChat.Client.ViewModel
 {
     public class GroupChat : Chat, INotifyPropertyChanged
     {
+        private int chatNumber;
         private ObservableCollection<ClientUser> groupUsers;
         public ObservableCollection<ClientUser> GroupUsers
         {
@@ -21,13 +22,14 @@ namespace FZChat.Client.ViewModel
             }
         }
 
-        public GroupChat(List<ClientUser> users) : base()
+        public GroupChat(int chatNumber, List<ClientUser> users) : base()
         {
             groupUsers = new ObservableCollection<ClientUser>();
             foreach (ClientUser user in users)
             {
                 groupUsers.Add(user);
             }
+            this.chatNumber = chatNumber;
         }
     }
 }

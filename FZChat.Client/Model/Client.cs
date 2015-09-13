@@ -52,6 +52,8 @@ namespace FZChat.Client.Model
         public event EventHandler<OnlineUserChangedEventArgs> OnlineUserChanged;
         public event EventHandler<FriendInformationEventArgs> FriendInformationReceived;
         public event EventHandler<FriendRequestEventArgs> FriendRequestReceived;
+        public event EventHandler<NewChatEventArgs> NewChatCreated;
+        public event EventHandler<UserLeaveChatEventArgs> UserLeaveChat;
         
         public Client()
         {
@@ -114,16 +116,39 @@ namespace FZChat.Client.Model
                 case MessageType.OK:
                     currentResponse = msg;
                     break;
-                case MessageType.CREATECHAT:
-                    break;
                 case MessageType.ERROR:
                     currentResponse = msg;
                     break;
                 case MessageType.INVALID:
                     currentResponse = msg;
                     break;
+                case MessageType.CREATECHAT:
+                    OnNewChatCreated(msg);
+                    break;
+                case MessageType.LEAVECHAT:
+                    if (UserLeaveChat != null)
+                    {
+                        UserLeaveChat(this, new UserLeaveChatEventArgs(msg.Sender, msg.Content));
+                    }
+                    break;
                 default:
                     break;
+            }
+        }
+
+        private void OnNewChatCreated(Message msg)
+        {
+            string[] tokens = msg.Content.Split();
+            string sender = msg.Sender;
+            int chatNumber = int.Parse(tokens[0]);
+            List<string> userNames = new List<string>();
+            for (int i = 1; i < tokens.Length; i++)
+            {
+                userNames.Add(tokens[i]);
+            }
+            if (NewChatCreated != null)
+            {
+                NewChatCreated(this, new NewChatEventArgs(chatNumber, sender, userNames));
             }
         }
 
@@ -252,6 +277,17 @@ namespace FZChat.Client.Model
                         sb.AppendFormat("{0}|", tokens[i]);
                     }
                     msg = new Message(MessageType.FRIENDSEARCH, time, "SERVER", sb.ToString());
+                    break;
+                case "CREATECHAT":
+                    sb = new StringBuilder();
+                    for (int i = 3; i < tokens.Length; i++)
+                    {
+                        sb.AppendFormat("{0}|", tokens[i]);
+                    }
+                    msg = new Message(MessageType.CREATECHAT, time, tokens[2], sb.ToString());
+                    break;
+                case "LEAVECHAT":
+                    msg = new Message(MessageType.LEAVECHAT, time, tokens[2], tokens[3]);
                     break;
                 default:
                     msg = new Message(MessageType.ERROR, time);
