@@ -11,12 +11,6 @@ namespace FZChat.Client.ViewModel
     public abstract class Chat : INotifyPropertyChanged
     {
         private ObservableCollection<ChatLog> chatLogs;
-
-        public Chat()
-        {
-            chatLogs = new ObservableCollection<ChatLog>();
-        }
-
         public ObservableCollection<ChatLog> ChatLogs
         {
             get { return chatLogs; }
@@ -26,6 +20,35 @@ namespace FZChat.Client.ViewModel
                 OnPropertyChanged("ChatLogs");
             }
         }
+
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                name = value;
+                OnPropertyChanged("Name");
+            }
+        }
+
+        private string summary;
+        public string Summary
+        {
+            get { return summary; }
+            set
+            {
+                summary = value;
+                OnPropertyChanged("Summary");
+            }
+        }
+
+        public Chat()
+        {
+            chatLogs = new ObservableCollection<ChatLog>();
+        }
+
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
 

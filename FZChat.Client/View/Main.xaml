@@ -6,27 +6,12 @@
         xmlns:local="clr-namespace:FZ_view"
         xmlns:viewmodel="clr-namespace:FZChat.Client.ViewModel"
         mc:Ignorable="d"
-        Title="Main" Height="600" Width="850" Visibility="Visible" Background="{x:Null}" AllowsTransparency="True" WindowStyle="None" >
+        Title="Main" Height="600" Width="850" Visibility="Visible" Background="{x:Null}" 
+        AllowsTransparency="True" WindowStyle="None" Icon="resource/tubiao.ico" >
     <Window.DataContext>
         <viewmodel:MainViewModel></viewmodel:MainViewModel>
     </Window.DataContext>
     <Grid  Background="#FFE2E2E2" MaxWidth="1800" MaxHeight="900">
-        <Grid x:Name="TextWindow"  Background="#FFECECEC"  MouseLeftButtonDown="TextWindow_MouseLeftButtonDown" VerticalAlignment="Bottom" Height="203" Margin="0,0,226,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="8*"/>
-                <RowDefinition Height="35*"/>
-                <RowDefinition Height="8*"/>
-            </Grid.RowDefinitions>
-            <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="134" TextWrapping="Wrap" VerticalAlignment="Top" Width="616" Background="Transparent" BorderThickness="0" Grid.Row="1"/>
-            <Border x:Name="CloseWindow1" BorderBrush="#FFDADADA" BorderThickness="2" HorizontalAlignment="Right" Height="28" Margin="0,135,116,0" Grid.Row="1" VerticalAlignment="Top" Width="90" Background="#FFECECEC" MouseEnter="Border_MouseEnter_1" MouseLeave="CloseWindow1_MouseLeave" MouseLeftButtonDown="CloseWindow1_MouseLeftButtonDown" MouseLeftButtonUp="CloseWindow1_MouseLeftButtonUp" Grid.RowSpan="2">
-                <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="22" Margin="16,0,0,0" TextWrapping="Wrap" Text="关闭(C)" 
-        			VerticalAlignment="Bottom" Width="61" FontSize="16" Foreground="Gray"/>
-            </Border>
-            <Border x:Name="SendMessage" BorderBrush="#FFDADADA" BorderThickness="2" HorizontalAlignment="Right" Height="28" Margin="517,135,0,0" Grid.Row="1" VerticalAlignment="Top" Width="90" Background="#FFECECEC" MouseEnter="Border_MouseEnter_2" MouseLeave="SendMessage_MouseLeave" MouseLeftButtonDown="SendMessage_MouseLeftButtonDown" Grid.RowSpan="2">
-                <TextBlock x:Name="textBlock1" HorizontalAlignment="Right" Height="21" Margin="0,0,8,1" TextWrapping="Wrap" Text="发送(S)" 
-        			VerticalAlignment="Bottom" Width="60" FontSize="16" Foreground="Gray"/>
-            </Border>
-        </Grid>
         <Grid Margin="624,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="124"/>
@@ -52,7 +37,7 @@
                     </Grid.ColumnDefinitions>
                     <Border x:Name="搜索" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="30" Margin="7,3,0,0" VerticalAlignment="Top" Width="170" CornerRadius="5" Background="#FFA9B2B0" Grid.ColumnSpan="2">
                         <TextBox FontSize="17" Height="30" Margin="35,0,0,0" x:Name="finding" VerticalAlignment="Top" Foreground="White" 
-                             TabIndex="0" BorderThickness="0" BorderBrush="White" Text="{Binding UserName}" FontFamily="STSong" SelectionBrush="White">
+                             TabIndex="0" BorderThickness="0" BorderBrush="White" Text="{Binding Finding}" FontFamily="STSong" SelectionBrush="White">
                             <TextBox.Resources>
                                 <VisualBrush x:Key="HelpBrush" TileMode="None" Opacity="0.3" Stretch="None" AlignmentX="Left">
                                     <VisualBrush.Visual>
@@ -152,28 +137,134 @@
                     </Canvas>
                 </Grid>
             </Grid>
-            <Grid x:Name="Grid1" Background="#FF1E2E2C" HorizontalAlignment="Right" Width="226" Margin="0,123,0,0" Grid.RowSpan="2"/>
+            <Grid x:Name="Grid1" Background="#FF1E2E2C" HorizontalAlignment="Right" Width="226" Margin="0,54,-666,-55" Grid.Row="1">
+                <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="477" VerticalAlignment="Top" Width="226" 
+                         Background="{x:Null}" BorderThickness="0" SelectionChanged="listBox_SelectionChanged">
+                    <Grid Height="35" Width="211">
+                        <Image x:Name="image1" HorizontalAlignment="Left" Height="24" Margin="6,6,0,0" VerticalAlignment="Top" Width="24"/>
+                        <TextBlock x:Name="FriendName" HorizontalAlignment="Left" Height="20" Margin="30,5,0,0" TextWrapping="Wrap" 
+                                   Text="{Binding ChatGroupName}"  VerticalAlignment="Top" Width="176" Foreground="#FFC8C8C8"><Run Text="TextBlock"/><Run Text="1"/></TextBlock>
+                    </Grid>
+                    
+                </ListBox>
+            </Grid>
 
-            <Grid x:Name="Grid2" Margin="0,0,0,-1" Background="#FF1E2E2C" Grid.Row="1"/>
+            <Grid x:Name="Grid2" Background="#FF1E2E2C" Grid.Row="1">
+                <ListView x:Name="ChatListView" HorizontalAlignment="Left" Height="476" 
+                         Margin="0" VerticalAlignment="Top" Width="228" BorderThickness="0,0,1,0" 
+                         Background="{x:Null}" ItemsSource="{Binding Chats}" SelectedItem="{Binding SelectedChat}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Height="76" Width="204">
+                                <Image x:Name="image3" HorizontalAlignment="Left" Height="56" Margin="6,10,0,0" VerticalAlignment="Top" Width="60"/>
+                                <TextBlock x:Name="ChatName" HorizontalAlignment="Left" Height="22" 
+                                           Margin="66,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" 
+                                           Width="90" Text="{Binding Path=Name}"/>
+                                <TextBlock x:Name="ChatMessageSummery" HorizontalAlignment="Left"
+                                           Height="19" Margin="66,40,0,0" TextWrapping="Wrap" 
+                                           VerticalAlignment="Top" Width="84"
+                                           Text="{Binding Path=Summary}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
         </Grid>
-        
+
         <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="788" MouseDown="Border_MouseDown" Background="#00E2E2E2"/>
-        <ListView x:Name="listView" HorizontalAlignment="Left" Height="392" VerticalAlignment="Top" Width="624"
-                  Background="{x:Null}" ItemsSource="{Binding TestViewItems}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <DockPanel Height="80">
-                        <Grid DockPanel.Dock="{Binding DockProperty}" Width="120">
-                            <Rectangle Fill="Blue" Width="120">
-                                
-                            </Rectangle>
-                        </Grid>
-                        <Grid></Grid>
-                    </DockPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            
-        </ListView>
+        <Grid x:Name="ChatGrid" HorizontalAlignment="Left" Height="600" VerticalAlignment="Top" Width="624">
+            <Grid x:Name="TextWindow"  Background="#FFECECEC"  MouseLeftButtonDown="TextWindow_MouseLeftButtonDown" VerticalAlignment="Bottom" Height="203">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="8*"/>
+                    <RowDefinition Height="35*"/>
+                    <RowDefinition Height="8*"/>
+                </Grid.RowDefinitions>
+                <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="134" TextWrapping="Wrap" VerticalAlignment="Top" Width="616" Background="Transparent" BorderThickness="0" Grid.Row="1"/>
+                <Border x:Name="CloseWindow1" BorderBrush="#FFDADADA" BorderThickness="2" HorizontalAlignment="Right" Height="28" Margin="0,135,120,0" Grid.Row="1" VerticalAlignment="Top" Width="90" Background="#FFECECEC" MouseEnter="Border_MouseEnter_1" MouseLeave="CloseWindow1_MouseLeave" MouseLeftButtonDown="CloseWindow1_MouseLeftButtonDown" MouseLeftButtonUp="CloseWindow1_MouseLeftButtonUp" Grid.RowSpan="2">
+                    <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="22" Margin="16,0,0,0" TextWrapping="Wrap" Text="关闭(C)" 
+        				VerticalAlignment="Bottom" Width="61" FontSize="16" Foreground="Gray"/>
+                </Border>
+                <Border x:Name="SendMessage" BorderBrush="#FFDADADA" BorderThickness="2" HorizontalAlignment="Right" Height="28" Margin="0,135,5,0" Grid.Row="1" VerticalAlignment="Top" Width="90" Background="#FFECECEC" MouseEnter="Border_MouseEnter_2" MouseLeave="SendMessage_MouseLeave" MouseLeftButtonDown="SendMessage_MouseLeftButtonDown" Grid.RowSpan="2">
+                    <TextBlock x:Name="textBlock1" HorizontalAlignment="Right" Height="21" Margin="0,0,8,1" TextWrapping="Wrap" Text="发送(S)" 
+        				VerticalAlignment="Bottom" Width="60" FontSize="16" Foreground="Gray"/>
+                </Border>
+            </Grid>
+            <ListView x:Name="listView" HorizontalAlignment="Left" Height="395" VerticalAlignment="Top" Width="624"
+        		Background="{x:Null}" ItemsSource="{Binding TestViewItems}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel Height="80">
+                            <Grid DockPanel.Dock="{Binding DockProperty}" Width="120">
+                                <Rectangle Fill="Blue" Width="120"/>
+                            </Grid>
+                            <Grid/>
+                        </DockPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+        </Grid>
+        <Grid x:Name="MessageGrid" HorizontalAlignment="Left" Height="600" VerticalAlignment="Top" Width="624" Margin="-768,0,0,0">
+            <Grid x:Name="MessageGrid1" HorizontalAlignment="Left" Height="600" VerticalAlignment="Top" Width="624" Background="#FFECECEC">
+                <Grid HorizontalAlignment="Left" Height="580" Margin="10,10,0,0" VerticalAlignment="Top" Width="604">
+                    <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="158" Margin="238,115,0,0" VerticalAlignment="Top" Width="158"/>
+                    <TextBox FontSize="20" Height="25" x:Name="RemarkText" VerticalAlignment="Bottom" Foreground="White" 
+        				TabIndex="0" BorderThickness="0" BorderBrush="White"  Margin="303,0,162,191" SelectionBrush="#FF0C0F11"
+        				Text="{Binding RemarkText}" >
+                        <TextBox.Resources>
+                            <VisualBrush x:Key="HelpBrush" TileMode="None" Stretch="None" AlignmentX="Left">
+                                <VisualBrush.Visual>
+                                    <TextBlock Text="点击添加备注" FontSize="16" Foreground="LightGray"/>
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </TextBox.Resources>
+                        <TextBox.Style>
+                            <Style TargetType="{x:Type TextBox}">
+                                <Style.Triggers>
+                                    <Trigger Property="Text" Value="{x:Null}">
+                                        <Setter Property="Background" Value="{StaticResource HelpBrush}"/>
+                                    </Trigger>
+                                    <Trigger Property="Text" Value="">
+                                        <Setter Property="Background" Value="{StaticResource HelpBrush}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Height="36" Margin="264,298,0,0" TextWrapping="Wrap" 
+                               Text="{Binding UserName}" VerticalAlignment="Top" Width="100" FontSize="32" FontWeight="Bold"/>
+                    <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Height="34" Margin="221,360,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77" FontSize="21.333" Foreground="#FF0000FE"><Run Text="备"/><Run Text="   "/><Run Text=" "/><Run Text="注"/></TextBlock>
+                    <TextBlock x:Name="textBlock3_Copy" HorizontalAlignment="Left" Height="34" Margin="221,394,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75" FontSize="21.333" Foreground="Blue" Text="风竹号" RenderTransformOrigin="0.5,0.5">
+                        <TextBlock.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-0.533"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </TextBlock.RenderTransform>
+                    </TextBlock>
+                    <TextBlock x:Name="textBlock3_Copy1" HorizontalAlignment="Left" Height="34" Margin="221,428,0,0" TextWrapping="Wrap" Text="地    区" VerticalAlignment="Top" Width="77" FontSize="21.333" Foreground="Blue"/>
+                    <TextBlock Margin="303,398,0,0" x:Name="FzNumber" HorizontalAlignment="Left" Height="25" TextWrapping="Wrap" 
+        				Text="{Binding FzNumber}" VerticalAlignment="Top" Width="139" FontSize="16"/>
+                    <TextBlock Margin="303,432,0,0" x:Name="District" HorizontalAlignment="Left" Height="25" TextWrapping="Wrap" 
+        				Text="{Binding District}" VerticalAlignment="Top" Width="139" FontSize="16"/>
+                </Grid>
+            </Grid>
+            <Grid x:Name="ChatGroupGrid" HorizontalAlignment="Left" Height="600" VerticalAlignment="Top" Width="624" Background="#FFECECEC">
+                <WrapPanel HorizontalAlignment="Left" Height="440" VerticalAlignment="Top" Width="570" Margin="28,67,0,0">
+                    <Grid Height="110" Width="95">
+                        <Image x:Name="image" HorizontalAlignment="Left" Margin="15,10,0,33" Width="66"/>
+                        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="20" Margin="6,90,0,0" VerticalAlignment="Top" Width="84" CornerRadius="5">
+                            <TextBlock x:Name="textBlock4" HorizontalAlignment="Left" Height="21" Margin="3,-2,0,-1" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="75"/>
+                        </Border>
+
+                    </Grid>
+                </WrapPanel>
+                <TextBlock x:Name="ChatGroupName" HorizontalAlignment="Left" Height="31" Margin="193,10,0,0" TextWrapping="Wrap" 
+            		Text="{Binding ChatGroupName}" VerticalAlignment="Top" Width="233"/>
+            </Grid>
+        </Grid>
 
 
     </Grid>

@@ -37,7 +37,7 @@ namespace FZChat.Model
         public Message(MessageType type)
         {
             _type = type;
-            _sendTime = SendTime;
+            _sendTime = DateTime.Now;
         }
 
         public Message(MessageType type, string content)

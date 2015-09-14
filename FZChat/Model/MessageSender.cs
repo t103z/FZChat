@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FZChat.Model.Utilities;
+using System.Diagnostics;
 
 namespace FZChat.Model
 {
@@ -62,8 +63,9 @@ namespace FZChat.Model
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Debug.WriteLine(ex.Data);
                     if (ConnectionLost != null)
                     {
                         ConnectionLost(this, new ConnectionLostEventArgs());

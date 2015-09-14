@@ -9,6 +9,7 @@ using System.Net;
 using System.Threading;
 using FZChat.Client.Model.Utilities;
 using FZChat.Client.ViewModel;
+using System.Diagnostics;
 
 namespace FZChat.Client.Model
 {
@@ -22,7 +23,7 @@ namespace FZChat.Client.Model
     public class Client
     {
         private MessageSender sender;
-        private Message currentResponse;
+        private Message currentResponse = new Message(MessageType.ERROR, new DateTime());
         private List<string> onlineFriendNames;
         public event EventHandler<MessageReceivedEventArgs> MessageReceived
         {
@@ -115,12 +116,18 @@ namespace FZChat.Client.Model
                     break;
                 case MessageType.OK:
                     currentResponse = msg;
+                    Debug.WriteLine("response updated {0}", DateTime.Now);
                     break;
                 case MessageType.ERROR:
                     currentResponse = msg;
+                    Debug.WriteLine("response updated {0}", DateTime.Now);
                     break;
                 case MessageType.INVALID:
-                    currentResponse = msg;
+                    lock (currentResponse)
+                    {
+                        currentResponse = msg;
+                        Debug.WriteLine("response updated {0}", DateTime.Now);
+                    }
                     break;
                 case MessageType.CREATECHAT:
                     OnNewChatCreated(msg);
@@ -299,15 +306,19 @@ namespace FZChat.Client.Model
         public ResponseType Send(Message msg)
         {
             sender.SendMessage(msg);
-            for (int i = 0; i < 3; i++)
+            Thread.Sleep(500);
+            for (int i = 0; i < 10; i++)
             {
+                Debug.WriteLine("checked {0}", DateTime.Now);
                 if (currentResponse == null)
                 {
+                    Thread.Sleep(50);
                     continue;
                 }
                 //等待150ms响应
-                if (currentResponse.SendTime > msg.SendTime)
+                if (DateTime.Compare(msg.SendTime, currentResponse.SendTime) > 0)
                 {
+                    Debug.WriteLine("Response handled {0}", DateTime.Now);
                     switch (currentResponse.Type)
                     {
                         case MessageType.INVALID:
@@ -325,6 +336,7 @@ namespace FZChat.Client.Model
                     Thread.Sleep(50);
                 }
             }
+            Debug.WriteLine("No response {0}", DateTime.Now);
             return ResponseType.ERROR;
         }
 

@@ -91,7 +91,7 @@ namespace FZChat.Client.View
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            new FindPassword().Show();
+            new ConnectionSetting().Show();
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

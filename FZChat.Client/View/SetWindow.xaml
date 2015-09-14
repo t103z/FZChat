@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:FZ_view"
         xmlns:viewmodel="clr-namespace:FZChat.Client.ViewModel"
         mc:Ignorable="d"
-        x:Name="Window1"
-        Title="Window1" Height="760" Width="600" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}" Visibility="Visible">
+        x:Name="SetWindowView"
+        Title="SetWindowView" Height="760" Width="600" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}" Visibility="Visible">
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>

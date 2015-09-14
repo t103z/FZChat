@@ -53,12 +53,16 @@ namespace FZChat.Client.View
         {
             Grid1.Visibility = Visibility.Hidden;
             Grid2.Visibility = Visibility.Visible;
+            ChatGrid.Visibility = Visibility.Visible;
+            MessageGrid.Visibility = Visibility.Hidden;
         }
 
         private void Path_MouseLeftButtonUp_1(object sender, MouseButtonEventArgs e)
         {
             Grid2.Visibility = Visibility.Hidden;
             Grid1.Visibility = Visibility.Visible;
+            ChatGrid.Visibility = Visibility.Hidden;
+            MessageGrid.Visibility = Visibility.Visible;
         }
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)
@@ -259,6 +263,10 @@ namespace FZChat.Client.View
             this.DragMove();
         }
 
+        private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
 

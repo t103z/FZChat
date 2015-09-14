@@ -76,6 +76,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\ConnectionSettingViewModel.cs" />
     <Compile Include="ViewModel\Converter\GenderOptionConverter.cs" />
     <Compile Include="ViewModel\CreatGroup.cs" />
     <Compile Include="ViewModel\FindPasswordViewModel.cs" />
@@ -89,6 +90,9 @@
     <Compile Include="ViewModel\TestItem.cs" />
     <Compile Include="ViewModel\Utilities\Messenger.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\ConnectionSetting.xaml.cs">
+      <DependentUpon>ConnectionSetting.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\PasswordBoxMonitor.cs" />
     <Compile Include="View\PopupWindow1.xaml.cs">
       <DependentUpon>PopupWindow1.xaml</DependentUpon>
@@ -96,6 +100,10 @@
     <Compile Include="View\SetWindow.xaml.cs">
       <DependentUpon>SetWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\ConnectionSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\CreatGroup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -127,11 +135,11 @@
     <Compile Include="Model\Utilities\NewChatEventArgs.cs" />
     <Compile Include="Model\Utilities\PrivateMessageEventArgs.cs" />
     <Compile Include="Model\Utilities\UserLeaveChatEventArgs.cs" />
-    <Compile Include="ViewModel\Chat.cs" />
-    <Compile Include="ViewModel\ChatLog.cs" />
-    <Compile Include="ViewModel\ClientUser.cs" />
-    <Compile Include="ViewModel\GroupChat.cs" />
-    <Compile Include="ViewModel\PrivateChat.cs" />
+    <Compile Include="Model\Chat.cs" />
+    <Compile Include="Model\ChatLog.cs" />
+    <Compile Include="Model\ClientUser.cs" />
+    <Compile Include="Model\GroupChat.cs" />
+    <Compile Include="Model\PrivateChat.cs" />
     <Compile Include="View\App.xaml.cs" />
     <Compile Include="View\CreatGroup.xaml.cs">
       <DependentUpon>CreatGroup.xaml</DependentUpon>
@@ -188,6 +196,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="View\FZ_view.csproj" />
+    <Resource Include="View\resource\tubiao.ico" />
     <Resource Include="View\resource\1.jpg" />
     <Resource Include="View\resource\10.jpg" />
     <Resource Include="View\resource\11.jpg" />

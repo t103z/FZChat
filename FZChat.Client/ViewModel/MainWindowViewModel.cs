@@ -23,6 +23,8 @@ namespace FZChat.Client.ViewModel
         public  string      Password { get; set; }
         public  bool        RememberPassword { get; set; }
         public  bool        AutoLogIn { get; set; }
+        public  int         PortNumber { get; set; }
+        public  string      IpAddress { get; set; }
     }
 
     [Serializable]
@@ -46,6 +48,32 @@ namespace FZChat.Client.ViewModel
                 OnPropertyChanged("UserName");
             }
         }
+
+        private string      ipAddress;
+        public  string      IpAddress
+        {
+            get
+            {
+                return ipAddress;
+            }
+            set
+            {
+                ipAddress = value;
+                OnPropertyChanged("IpAddress");
+            }
+        }
+
+        private int         portNumber;
+
+        public  int         PortNumber
+        {
+            get { return portNumber; }
+            set {
+                portNumber = value;
+                OnPropertyChanged("PortNumber");
+            }
+        }
+
 
         private string      password;
         public  string      Password
@@ -121,6 +149,8 @@ namespace FZChat.Client.ViewModel
                     Password = _loginOptions.Password;
                     AutoLogIn = _loginOptions.AutoLogIn;
                     RememberPassword = _loginOptions.RememberPassword;
+                    IpAddress = _loginOptions.IpAddress;
+                    PortNumber = _loginOptions.PortNumber;
                     if (!RememberPassword)
                     {
                         Password = null;
@@ -132,6 +162,8 @@ namespace FZChat.Client.ViewModel
                     Password = null;
                     AutoLogIn = false;
                     RememberPassword = false;
+                    IpAddress = "127.0.0.1";
+                    PortNumber = 8500;
                 }
             }
         }
@@ -188,7 +220,9 @@ namespace FZChat.Client.ViewModel
                 UserName = userName,
                 Password = password,
                 AutoLogIn = autoLogIn,
-                RememberPassword = rememberPassword
+                RememberPassword = rememberPassword,
+                IpAddress = ipAddress,
+                PortNumber = portNumber
             };
             using (var stream = File.Open("LogInOptions.xml", FileMode.Create))
             {
@@ -213,7 +247,12 @@ namespace FZChat.Client.ViewModel
             HashAlgorithm alg = HashAlgorithm.Create("MD5");
             byte[] plainData = Encoding.Unicode.GetBytes(password);
             byte[] hashData = alg.ComputeHash(plainData);
-            return Encoding.Unicode.GetString(hashData);
+            string encripted = string.Empty;
+            foreach (byte digit in hashData)
+            {
+                encripted += digit.ToString("X").PadLeft(2, '0');
+            }
+            return encripted;
         }
         public event PropertyChangedEventHandler PropertyChanged;
 

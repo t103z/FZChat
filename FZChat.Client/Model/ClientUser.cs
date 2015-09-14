@@ -15,15 +15,15 @@ namespace FZChat.Client.ViewModel
     }
     public class ClientUser : IUser, INotifyPropertyChanged
     {
-        private int age;
-        private string email;
-        private GenderOption gender;
-        private int head;
-        private string userName;
-        private string nickName;
-        private OnlineStatus status;
+        private int             age;
+        private string          email;
+        private GenderOption    gender;
+        private int             head;
+        private string          userName;
+        private string          nickName;
+        private OnlineStatus    status;
 
-        public int Age
+        public  int             Age
         {
             get
             {
@@ -37,7 +37,7 @@ namespace FZChat.Client.ViewModel
             }
         }
 
-        public string Email
+        public  string          Email
         {
             get
             {
@@ -51,7 +51,7 @@ namespace FZChat.Client.ViewModel
             }
         }
 
-        public GenderOption Gender
+        public  GenderOption    Gender
         {
             get
             {
@@ -65,7 +65,7 @@ namespace FZChat.Client.ViewModel
             }
         }
 
-        public int Head
+        public  int             Head
         {
             get
             {
@@ -79,7 +79,7 @@ namespace FZChat.Client.ViewModel
             }
         }
 
-        public string NickName
+        public  string          NickName
         {
             get
             {
@@ -93,7 +93,7 @@ namespace FZChat.Client.ViewModel
             }
         }
 
-        public string UserName
+        public  string          UserName
         {
             get
             {
@@ -107,7 +107,7 @@ namespace FZChat.Client.ViewModel
             }
         }
 
-        public OnlineStatus Status
+        public  OnlineStatus    Status
         {
             get
             {
@@ -120,7 +120,7 @@ namespace FZChat.Client.ViewModel
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public  event PropertyChangedEventHandler PropertyChanged;
 
         public ClientUser(string userName, string nickName, int age, GenderOption gender,
             string email, OnlineStatus status)
