@@ -43,12 +43,20 @@ namespace FZChat.Client.ViewModel
             }
         }
 
-        public Chat()
+        public Chat(string chatName)
         {
             chatLogs = new ObservableCollection<ChatLog>();
+            name = chatName;
+            if (chatLogs.Count != 0)
+            {
+                summary = chatLogs.Last().Content;
+            }
         }
 
-        
+        public void AddChatLog(ChatLog log)
+        {
+            chatLogs.Add(log);
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

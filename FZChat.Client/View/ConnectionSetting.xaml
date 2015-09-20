@@ -17,6 +17,6 @@
         <TextBox x:Name="PortTextBox" VerticalAlignment="Center" HorizontalAlignment="Center" Width="120"
                  Margin="40,20,0,0" Text="{Binding PortNumber, Mode=TwoWay}"/>
         <Button x:Name="SaveButton" Content="确定" VerticalAlignment="Center" HorizontalAlignment="Center"
-                Margin="0,80,0,0" Width="60" Click="SaveButton_Click"/>
+                Margin="0,80,0,0" Width="60" Command="{Binding EnterCommand}"/>
     </Grid>
 </Window>

@@ -13,17 +13,20 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Navigation;
 using System.Diagnostics;
+using FZChat.Client.ViewModel;
+using FZChat.Client.ViewModel.Service;
 
 namespace FZChat.Client.View
 {
     /// <summary>
     /// PopupWindow1.xaml 的交互逻辑
     /// </summary>
-    public partial class PopupWindow1 : Window
+    public partial class SearchFriendWindow : Window
     {
-        public PopupWindow1()
+        public SearchFriendWindow(ClientDataService service)
         {
             InitializeComponent();
+            this.DataContext = new SearchFriendViewModel(service, this.Close);
         }
 
         private void textBlock_MouseEnter(object sender, MouseEventArgs e)
@@ -55,5 +58,7 @@ namespace FZChat.Client.View
         {
 
         }
+
+        
     }
 }

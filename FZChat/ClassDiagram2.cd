@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="FZChat.App" Collapsed="true">
     <Position X="3" Y="0.5" Width="1.5" />
     <TypeIdentifier>
@@ -23,81 +23,81 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FZChat.Model.MessageReceiver" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="8.25" Y="1.5" Width="1.5" />
+  <Class Name="FZChat.Model.MessageReceiver" BaseTypeListCollapsed="true">
+    <Position X="2.5" Y="12.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>IAAQIAAAxAAAAAgAACAAAQAAAIAAAAAAhAAAQQAAAAA=</HashCode>
       <FileName>Model\MessageReceiver.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="FZChat.Model.MessageSender" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10" Y="1.5" Width="1.5" />
+    <Position X="1" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAACAAwCAAAAAAACAAAIQAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Model\MessageSender.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="FZChat.Model.OnlineUser" Collapsed="true">
-    <Position X="0.5" Y="1.75" Width="1.5" />
+    <Position X="4.75" Y="9.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\OnlineUser.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FZChat.Model.Server">
-    <Position X="8.25" Y="3.5" Width="1.5" />
+    <Position X="9.5" Y="11" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAgACAAIwCAIAABAAAAABAAAAAAMIIABJAAAAAAAAAA=</HashCode>
+      <HashCode>CAgACAAIwCAIAABAAAAABAAAAAAMIIABJAAAIAAAAAA=</HashCode>
       <FileName>Model\Server.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FZChat.Model.ServerChat" Collapsed="true">
-    <Position X="8.25" Y="2.5" Width="1.5" />
+    <Position X="2.5" Y="10.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAABAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <HashCode>AAAAAAAAACAAAAABAAAAAAAAAAAACAAAAAAAAQAABAA=</HashCode>
       <FileName>Model\ServerChat.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FZChat.Model.ServerUser" Collapsed="true">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Position X="4.75" Y="8.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAICAAEAAABAAAAAAAAECAQAAAAAAABA=</HashCode>
       <FileName>Model\ServerUser.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="FZChat.Model.UserDatabase" Collapsed="true">
-    <Position X="6.5" Y="3.5" Width="1.5" />
+  <Class Name="FZChat.Model.UserDatabase">
+    <Position X="6.25" Y="12.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAEAAAAAADAAAAAAAAAAABEoASAAAAAgEYAAAIAAAEg=</HashCode>
+      <HashCode>AAEAAAAAADAAAAAAAAAAABEoATAAAAAgEYAAAIIAAEg=</HashCode>
       <FileName>Model\UserDatabase.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FZChat.Model.Utilities.ClientConnectedEventArgs" Collapsed="true">
-    <Position X="4.75" Y="0.5" Width="1.5" />
+    <Position X="6.75" Y="9.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\Utilities\ClientConnectedEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FZChat.Model.Utilities.ConnectionLostEventArgs" Collapsed="true">
-    <Position X="6.5" Y="0.5" Width="1.5" />
+    <Position X="6.75" Y="10.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\Utilities\ConnectionLostEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FZChat.Model.Utilities.MessageReceivedEventArgs" Collapsed="true">
-    <Position X="6.5" Y="1.5" Width="1.5" />
+    <Position X="6.75" Y="8.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACABAAAgAQAgAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\Utilities\MessageReceivedEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FZChat.Model.Utilities.OnlineUserChangedEventArgs" Collapsed="true">
-    <Position X="3" Y="2.5" Width="1.5" />
+    <Position X="6.75" Y="11.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
       <FileName>Model\Utilities\OnlineUserChangedEventArgs.cs</FileName>
@@ -140,7 +140,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="FZChat.ViewModel.Utilities.CustomCommand" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="8.25" Y="0.5" Width="1.5" />
+    <Position X="9.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAACAAQAAEAEAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModel\Utilities\CustomCommand.cs</FileName>

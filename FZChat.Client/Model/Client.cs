@@ -49,7 +49,7 @@ namespace FZChat.Client.Model
         }
 
         public event EventHandler<GroupMessageEventArgs> GroupMessageReceived;
-        public event EventHandler<PrivateMessageEventArgs> PrivaeMessageReceived;
+        public event EventHandler<PrivateMessageEventArgs> PrivateMessageReceived;
         public event EventHandler<OnlineUserChangedEventArgs> OnlineUserChanged;
         public event EventHandler<FriendInformationEventArgs> FriendInformationReceived;
         public event EventHandler<FriendRequestEventArgs> FriendRequestReceived;
@@ -86,9 +86,9 @@ namespace FZChat.Client.Model
                     break;
                 case MessageType.PRIV:
                     //私聊，触发私聊信息事件
-                    if (PrivaeMessageReceived != null)
+                    if (PrivateMessageReceived != null)
                     {
-                        PrivaeMessageReceived(this,
+                        PrivateMessageReceived(this,
                             new PrivateMessageEventArgs(msg.SendTime, msg.Sender
                             , msg.Receiver, msg.Content));
                     }
@@ -145,17 +145,21 @@ namespace FZChat.Client.Model
 
         private void OnNewChatCreated(Message msg)
         {
-            string[] tokens = msg.Content.Split();
+            string[] tokens = msg.Content.Split(new char[] { '|' });
             string sender = msg.Sender;
             int chatNumber = int.Parse(tokens[0]);
+            string chatName = tokens[1];
             List<string> userNames = new List<string>();
-            for (int i = 1; i < tokens.Length; i++)
+            for (int i = 2; i < tokens.Length; i++)
             {
-                userNames.Add(tokens[i]);
+                if (!string.IsNullOrEmpty(tokens[i]))
+                {
+                    userNames.Add(tokens[i]);
+                }
             }
             if (NewChatCreated != null)
             {
-                NewChatCreated(this, new NewChatEventArgs(chatNumber, sender, userNames));
+                NewChatCreated(this, new NewChatEventArgs(chatNumber, chatName, sender, userNames));
             }
         }
 
@@ -167,19 +171,23 @@ namespace FZChat.Client.Model
             GenderOption gender = GenderOption.Male;
             for (int i = 0; i < tokens.Length; i++)
             {
-                if (i % 5 == 1)
+                if (string.IsNullOrEmpty(tokens[i]))
+                {
+                    break;
+                }
+                if (i % 5 == 0)
                 {
                     userName = tokens[i];
                 }
-                else if (i % 5 == 2)
+                else if (i % 5 == 1)
                 {
                     nickName = tokens[i];
                 }
-                else if (i % 5 == 3)
+                else if (i % 5 == 2)
                 {
                     gender = (GenderOption)Enum.Parse(typeof(GenderOption), tokens[i]);
                 }
-                else if (i % 5 == 4)
+                else if (i % 5 == 3)
                 {
                     age = int.Parse(tokens[i]);
                 }
@@ -315,8 +323,8 @@ namespace FZChat.Client.Model
                     Thread.Sleep(50);
                     continue;
                 }
-                //等待150ms响应
-                if (DateTime.Compare(msg.SendTime, currentResponse.SendTime) > 0)
+                //等待响应
+                if (msg.SendTime.CompareTo(currentResponse.SendTime + new TimeSpan(0,0,0,1,0)) <= 0)
                 {
                     Debug.WriteLine("Response handled {0}", DateTime.Now);
                     switch (currentResponse.Type)
@@ -340,42 +348,53 @@ namespace FZChat.Client.Model
             return ResponseType.ERROR;
         }
 
+        public void SendNoResponse(Message msg)
+        {
+            sender.SendMessage(msg);
+        }
+
         public List<ClientUser> SearchFriend(Message msg)
         {
             sender.SendMessage(msg);
+            Thread.Sleep(500);
             List<ClientUser> usersFound = new List<ClientUser>();
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 10; i++)
             {
                 if (currentResponse == null)
                 {
+                    Thread.Sleep(50);
                     continue;
                 }
-                //等待150ms响应
-                if (currentResponse.SendTime > msg.SendTime)
+                //等待响应
+                if (DateTime.Compare(msg.SendTime, currentResponse.SendTime + new TimeSpan(0, 0, 0, 1, 0)) <= 0)
                 {
-                    if (msg.Content.Trim().ToLower() == "empty")
-                    {
-                        break;
-                    }
-                    string[] tokens = msg.Content.Split(new char[] { '|' });
+                    string[] tokens = currentResponse.Content.Split(new char[] { '|' });
                     string userName = string.Empty, nickName = string.Empty, email = string.Empty;
                     int age = 18;
                     GenderOption gender = GenderOption.Male;
                     for (int j = 0; j < tokens.Length; j++)
                     {
-                        if (j % 5 == 1)
+                        if (tokens[j].Trim() == "empty")
+                        {
+                            break;
+                        }
+                        if (string.IsNullOrEmpty(tokens[j]))
+                        {
+                            break;
+                        }
+                        if (j % 5 == 0)
                         {
                             userName = tokens[j];
                         }
-                        else if (j % 5 == 2)
+                        else if (j % 5 == 1)
                         {
                             nickName = tokens[j];
                         }
-                        else if (j % 5 == 3)
+                        else if (j % 5 == 2)
                         {
                             gender = (GenderOption)Enum.Parse(typeof(GenderOption), tokens[j]);
                         }
-                        else if (j % 5 == 4)
+                        else if (j % 5 == 3)
                         {
                             age = int.Parse(tokens[j]);
                         }
@@ -391,6 +410,7 @@ namespace FZChat.Client.Model
                 {
                     Thread.Sleep(50);
                 }
+                return usersFound;
             }
             return usersFound;
         }

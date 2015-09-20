@@ -10,7 +10,7 @@ namespace FZChat.Model.Utilities
     {
         public string UserName { get; set; }
         public OnlineUser User { get; set; }
-        public string Type { get; set; }
+        public string Type { get; set; }//分为online和offline
         public OnlineUserChangedEventArgs(string userName, string type)
         {
             this.UserName = userName;

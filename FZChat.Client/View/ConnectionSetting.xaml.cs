@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FZChat.Client.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,11 +23,7 @@ namespace FZChat.Client.View
         public ConnectionSetting()
         {
             InitializeComponent();
-        }
-
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
+            this.DataContext = new ConnectionSettingViewModel(this.Close);
         }
     }
 }

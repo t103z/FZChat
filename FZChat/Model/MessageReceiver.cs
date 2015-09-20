@@ -9,6 +9,7 @@ using System.Threading;
 using System.Net;
 using System.IO;
 using System.Diagnostics;
+using System.Windows;
 
 namespace FZChat.Model
 {
@@ -34,6 +35,7 @@ namespace FZChat.Model
         void IMessageReceiver.StartListen(int port)
         {
             Thread workTread = new Thread(new ThreadStart(ListenThreadMethod));
+            workTread.IsBackground = true;
             workTread.Start();
         }
 
@@ -41,12 +43,13 @@ namespace FZChat.Model
         private void ListenThreadMethod()
         {
             //开始对本机IP和给定端口的监听
-            //IPAddress localIp = IPAddress.Parse(this.GetServerIPAddress());
-            IPAddress localIp = IPAddress.Parse("127.0.0.1");
+            IPAddress localIp = IPAddress.Parse(this.GetServerIPAddress());
+            //IPAddress localIp = IPAddress.Parse("127.0.0.1");
             listener = new TcpListener(localIp, _port);
             listener.Start();
             OnService = true;
-            Debug.WriteLine("Starts listening ip: {0} port: {1}", localIp.ToString(), _port);
+            string messageBoxText = "开始监听" + localIp.ToString() + ":" + _port.ToString();
+            MessageBox.Show(messageBoxText);
             //等待挂起连接请求
             do
             {
@@ -61,6 +64,7 @@ namespace FZChat.Model
                     }
                     //启动新线程
                     Thread workThread = new Thread(new ThreadStart(ServiceClient));
+                    workThread.IsBackground = true;
                     workThread.Start();
                 }
                 catch

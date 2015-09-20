@@ -86,6 +86,7 @@ namespace FZChat.Model
             this.RemoveUser(userName);
             this.AddUser(newUser);
         }
+        //查询是否存在用户
         public bool ContainsUser(string userName)
         {
             var selectedUsers = from u in dataContext.DatabaseUser
@@ -122,6 +123,7 @@ namespace FZChat.Model
             }
             return newServerUser;
         }
+        //添加用户聊天信息
         public void AddUserMessage(string userName, Message msg)
         {
             DatabaseUser targetUser = (from u in dataContext.DatabaseUser
@@ -138,7 +140,6 @@ namespace FZChat.Model
             targetUser.DatabaseUserMessage.Add(newUserMessage);
             dataContext.SubmitChanges();
         }
-
         //获得用户离线消息并清空离线消息
         public List<Message> FetchUserMessage(string userName)
         {
@@ -151,7 +152,7 @@ namespace FZChat.Model
             foreach (DatabaseUserMessage msg in fetchedUserMessage)
             {
                 MessageType msgType = (MessageType)Enum.Parse(typeof(MessageType), msg.Type);
-                Message newMessage = new Message(msgType, msg.Time, msg.Content, msg.Sender, msg.Receiver);
+                Message newMessage = new Message(msgType, msg.Time, msg.Sender, msg.Receiver, msg.Content);
                 newUserMessages.Add(newMessage.Clone() as Message);
             }
             foreach (DatabaseUserMessage msg in fetchedUserMessage)
@@ -240,6 +241,34 @@ namespace FZChat.Model
             dataContext.SubmitChanges();
         }
 
+        //查询用户所有群聊
+        public List<ServerChat> GetUserGroupChats(string userName)
+        {
+            var selectedUser = (from u in dataContext.DatabaseUser
+                                where u.UserName == userName
+                                select u).Single();
+            var userChats = from c in selectedUser.DatabaseUserChat
+                            select c;
+            List<ServerChat> allUserChats = new List<ServerChat>();
+            foreach (var chat in userChats)
+            {
+                var currentChat = (from c in dataContext.DatabaseGroupChat
+                                   where c.ChatNumber == chat.Number
+                                   select c).Single();
+                string currentChatName = currentChat.ChatName;
+                int currentChatNumber = currentChat.ChatNumber;
+                var currentChatUsers = from u in currentChat.DatabaseGroupChatUser
+                                       select u;
+                List<string> currentChatUserNames = new List<string>();
+                foreach (var user in currentChatUsers)
+                {
+                    currentChatUserNames.Add(user.UserName);
+                }
+                allUserChats.Add(new ServerChat(currentChatName, currentChatNumber, currentChatUserNames));
+            }
+            return allUserChats;
+        }
+
         //查找群聊是否存在
         public bool ContainsChat(int chatNumber)
         {
@@ -294,6 +323,44 @@ namespace FZChat.Model
                 dataContext.DatabaseGroupChatUser.DeleteOnSubmit(user);
             }
             dataContext.DatabaseGroupChat.DeleteOnSubmit(selectedChat);
+            dataContext.SubmitChanges();
+        }
+
+        //添加用户好友
+        public void MakeFriends(string sender, string receiver)
+        {
+            //将receiver添加到sender朋友列表里
+            var currentSender = (from u in dataContext.DatabaseUser
+                                 where u.UserName == sender
+                                 select u).Single();
+            //避免重复添加
+            var checkUser = from u in currentSender.UserFriend
+                            where u.UserName == receiver
+                            select u;
+            if (checkUser.Count() == 0)
+            {
+                UserFriend newFriend = new UserFriend()
+                {
+                    UserName = receiver
+                };
+                currentSender.UserFriend.Add(newFriend);
+            }
+            //将sender添加到receiver朋友列表里
+            var currentReceiver = (from u in dataContext.DatabaseUser
+                                   where u.UserName == receiver
+                                   select u).Single();
+            //避免重复添加
+            checkUser = from u in currentReceiver.UserFriend
+                            where u.UserName == receiver
+                            select u;
+            if (checkUser.Count() == 0)
+            {
+                UserFriend newFriend = new UserFriend()
+                {
+                    UserName = sender
+                };
+                currentReceiver.UserFriend.Add(newFriend);
+            }         
             dataContext.SubmitChanges();
         }
 
@@ -360,7 +427,7 @@ namespace FZChat.Model
             }
             //寻找昵称粗匹配
             var nickNameRoughMatches = from u in dataContext.DatabaseUser
-                                       where u.NickName.Contains(nickName)
+                                       where u.NickName.Contains(nickName) && u.NickName != nickName
                                        select u;
             foreach (DatabaseUser user in nickNameRoughMatches)
             {

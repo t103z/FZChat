@@ -55,7 +55,7 @@ namespace FZChat.Model
                         }
                         else
                         {
-                            string msgString = Encoding.Unicode.GetString(buffer);
+                            string msgString = Encoding.Unicode.GetString(buffer, 0, bytesRead);
                             if (MessageReceived != null)
                             {
                                 MessageReceived(this, new MessageReceivedEventArgs(msgString));

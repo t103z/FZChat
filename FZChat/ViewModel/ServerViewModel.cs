@@ -165,6 +165,7 @@ namespace FZChat.ViewModel
         private void StartListen(object obj)
         {
             Thread serverWorkThread = new Thread(new ThreadStart(StartServer));
+            serverWorkThread.IsBackground = true;
             serverWorkThread.Start();
             msgStrings.Add("Starts listening");
             listenStarted = true;

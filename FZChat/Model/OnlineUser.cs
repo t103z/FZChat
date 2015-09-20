@@ -21,6 +21,7 @@ namespace FZChat.Model
             this.Password = serverUser.Password;
             this.Age = serverUser.Age;
             this.Email = serverUser.Email;
+            this.FriendNames = serverUser.FriendNames;
             this.StreamToRemote = stream;
         }
     }

@@ -23,7 +23,7 @@ namespace FZChat.Client.ViewModel
             }
         }
 
-        public PrivateChat(ClientUser user) : base()
+        public PrivateChat(ClientUser user) : base(user.NickName)
         {
             remoteUser = user;
         }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FZChat.Client.ViewModel;
+using FZChat.Client.ViewModel.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +19,12 @@ namespace FZChat.Client.View
     /// <summary>
     /// CreatGroup.xaml 的交互逻辑
     /// </summary>
-    public partial class CreatGroup : Window
+    public partial class CreateGroup : Window
     {
-        public CreatGroup()
+        public CreateGroup(ClientDataService service)
         {
             InitializeComponent();
+            this.DataContext = new CreateGroupViewModel(service);
         }
 
         private void textBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -42,6 +45,11 @@ namespace FZChat.Client.View
         private void CloseButton_MouseLeave(object sender, MouseEventArgs e)
         {
             CloseButton.Background = new SolidColorBrush(Color.FromArgb(0, 255, 0, 0));
+        }
+
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
         }
     }
 }

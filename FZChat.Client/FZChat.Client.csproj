@@ -77,14 +77,21 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ViewModel\ConnectionSettingViewModel.cs" />
+    <Compile Include="ViewModel\Converter\AgeOptionConverterUltra.cs" />
+    <Compile Include="ViewModel\Converter\ChatBorderColorConverter.cs" />
     <Compile Include="ViewModel\Converter\GenderOptionConverter.cs" />
-    <Compile Include="ViewModel\CreatGroup.cs" />
+    <Compile Include="ViewModel\Converter\GenderOptionConverterUltra.cs" />
+    <Compile Include="ViewModel\CreateGroupViewModel.cs" />
     <Compile Include="ViewModel\FindPasswordViewModel.cs" />
+    <Compile Include="ViewModel\Messages\IPChangedMessage.cs" />
     <Compile Include="ViewModel\Messages\LogInMessage.cs" />
+    <Compile Include="ViewModel\Messages\NewFriendMessage.cs" />
+    <Compile Include="ViewModel\Messages\ShutDownMessage.cs" />
+    <Compile Include="ViewModel\Messages\UpdateChatsMessage.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
-    <Compile Include="ViewModel\PopupWindowViewModel.cs" />
+    <Compile Include="ViewModel\SearchFriendViewModel.cs" />
     <Compile Include="ViewModel\Service\ClientDataService.cs" />
     <Compile Include="ViewModel\SetWindowViewModel.cs" />
     <Compile Include="ViewModel\TestItem.cs" />
@@ -94,8 +101,8 @@
       <DependentUpon>ConnectionSetting.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\PasswordBoxMonitor.cs" />
-    <Compile Include="View\PopupWindow1.xaml.cs">
-      <DependentUpon>PopupWindow1.xaml</DependentUpon>
+    <Compile Include="View\SearchFriendWindow.xaml.cs">
+      <DependentUpon>SearchFriendWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SetWindow.xaml.cs">
       <DependentUpon>SetWindow.xaml</DependentUpon>
@@ -104,7 +111,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\CreatGroup.xaml">
+    <Page Include="View\CreateGroup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -141,8 +148,8 @@
     <Compile Include="Model\GroupChat.cs" />
     <Compile Include="Model\PrivateChat.cs" />
     <Compile Include="View\App.xaml.cs" />
-    <Compile Include="View\CreatGroup.xaml.cs">
-      <DependentUpon>CreatGroup.xaml</DependentUpon>
+    <Compile Include="View\CreateGroup.xaml.cs">
+      <DependentUpon>CreateGroup.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\FindPassword.xaml.cs">
       <DependentUpon>FindPassword.xaml</DependentUpon>
@@ -157,7 +164,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\PopupWindow1.xaml">
+    <Page Include="View\SearchFriendWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -184,6 +191,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram2.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -196,6 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="View\FZ_view.csproj" />
+    <Resource Include="View\resource\head.jpg" />
     <Resource Include="View\resource\tubiao.ico" />
     <Resource Include="View\resource\1.jpg" />
     <Resource Include="View\resource\10.jpg" />

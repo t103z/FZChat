@@ -13,6 +13,8 @@ using FZChat.Model;
 using FZChat.Client.Model;
 using FZChat.Client.View;
 using System.Security.Cryptography;
+using System.Net;
+using FZChat.Client.ViewModel.Messages;
 
 namespace FZChat.Client.ViewModel
 {
@@ -33,7 +35,7 @@ namespace FZChat.Client.ViewModel
         private Action      _closeAction;
         private SavedLogInOptions _loginOptions;
         private Service.ClientDataService dataService;
-        private bool IsConnected = false;
+        //private bool IsConnected = false;
 
         private string      userName;
         public  string      UserName
@@ -123,15 +125,14 @@ namespace FZChat.Client.ViewModel
             _closeAction = closeAction;
             LoadSettings();
             LoadCommands();
+            Utilities.Messenger.Default.Register<Messages.IPChangedMessage>(this, OnIpChanged);
             dataService = new Service.ClientDataService();
-            if (!dataService.Connect())
-            {
-                MessageBox.Show("无法连接至服务器");
-            }
-            else
-            {
-                IsConnected = true;
-            }
+        }
+
+        private void OnIpChanged(IPChangedMessage obj)
+        {
+            ipAddress = obj.IpAddressString;
+            portNumber = obj.portNumber;
         }
 
         private void LoadSettings()
@@ -188,7 +189,7 @@ namespace FZChat.Client.ViewModel
 
         private bool CanLogIn(object obj)
         {
-            if (UserName != null && Password != null && IsConnected)
+            if (UserName != null && Password != null)
             {
                 return true;
             }
@@ -200,16 +201,32 @@ namespace FZChat.Client.ViewModel
 
         private void LogIn(object obj)
         {
-            string passwordEncripted = GetMD5();
-            Message logInMessage = new Message(MessageType.LOGIN, UserName, passwordEncripted);
-            ResponseType logInResponse = dataService.SendLogInMessage(logInMessage);
-            if (logInResponse == ResponseType.OK)
+            if (!dataService.Connect(IPAddress.Parse(ipAddress),portNumber))
             {
-
+                MessageBox.Show("无法连接至服务器");
             }
             else
             {
+                //IsConnected = true;
+            }
+            string passwordEncripted = GetMD5();
+            Message logInMessage = new Message(MessageType.LOGIN, DateTime.Now, UserName, passwordEncripted);
+            ResponseType logInResponse = dataService.SendLogInMessage(logInMessage);
+            if (logInResponse == ResponseType.OK)
+            {
+                SaveSettings();
+                dataService.LoadUserData(userName);
+                dataService.UserName = UserName;
+                Main mainWindow = new Main(dataService);
+                this._closeAction.Invoke();
+            }
+            else if (logInResponse == ResponseType.INVALID)
+            {
                 MessageBox.Show("用户名或密码错误");
+            }
+            else
+            {
+                MessageBox.Show("网络错误");
             }
         }
 

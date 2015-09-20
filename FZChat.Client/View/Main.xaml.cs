@@ -14,6 +14,10 @@ using System.Windows.Shapes;
 using System.Windows.Navigation;
 using FZChat.Client.View;
 using System.Diagnostics;
+using FZChat.Client.ViewModel.Service;
+using FZChat.Client.ViewModel;
+using FZChat.Client.ViewModel.Utilities;
+using FZChat.Client.ViewModel.Messages;
 
 namespace FZChat.Client.View
 {
@@ -22,12 +26,17 @@ namespace FZChat.Client.View
     /// </summary>
     public partial class Main : Window
     {
-        public Main()
+        public Main(ClientDataService service)
         {
             InitializeComponent();
-
+            this.DataContext = new MainViewModel(service, this.Close);
+            Messenger.Default.Register<ViewModel.Messages.ShutDownMessage>(this, OnShutDownMessageReceived);
         }
 
+        private void OnShutDownMessageReceived(ShutDownMessage obj)
+        {
+            Environment.Exit(0);
+        }
 
         private void WindowsClose_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -44,17 +53,12 @@ namespace FZChat.Client.View
             WindowsClose.Background = new SolidColorBrush(Color.FromArgb(255, 234, 44, 44));
         }
 
-        private void WindowsClose_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            this.Close();
-        }
-
         private void Path_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             Grid1.Visibility = Visibility.Hidden;
             Grid2.Visibility = Visibility.Visible;
             ChatGrid.Visibility = Visibility.Visible;
-            MessageGrid.Visibility = Visibility.Hidden;
+            FriendInfromationGrid.Visibility = Visibility.Hidden;
         }
 
         private void Path_MouseLeftButtonUp_1(object sender, MouseButtonEventArgs e)
@@ -62,7 +66,7 @@ namespace FZChat.Client.View
             Grid2.Visibility = Visibility.Hidden;
             Grid1.Visibility = Visibility.Visible;
             ChatGrid.Visibility = Visibility.Hidden;
-            MessageGrid.Visibility = Visibility.Visible;
+            FriendInfromationGrid.Visibility = Visibility.Visible;
         }
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)
@@ -158,20 +162,6 @@ namespace FZChat.Client.View
             ChatButton.Stroke = new SolidColorBrush(Color.FromArgb(255, 191, 188, 188));
         }
 
-        private void Border_MouseEnter_1(object sender, MouseEventArgs e)
-        {
-            CloseWindow1.Background = new SolidColorBrush(Color.FromArgb(255, 255, 51, 51));
-        }
-
-        private void CloseWindow1_MouseLeave(object sender, MouseEventArgs e)
-        {
-            CloseWindow1.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-        }
-
-        private void CloseWindow1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            CloseWindow1.Background = new SolidColorBrush(Color.FromArgb(255, 234, 44, 44));
-        }
 
         private void CloseWindow1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -194,28 +184,21 @@ namespace FZChat.Client.View
             SendMessage.Background = new SolidColorBrush(Color.FromArgb(255, 68, 168, 0));
         }
 
-        private void Path_MouseEnter_1(object sender, MouseEventArgs e)
+        private void AddFriendPath_MouseEnter(object sender, MouseEventArgs e)
         {
-            Finding1.Stroke = new SolidColorBrush(Color.FromArgb(255, 228, 228, 228));
+            AddFriendPath.Stroke = new SolidColorBrush(Color.FromArgb(255, 228, 228, 228));
         }
 
-        private void Path_MouseLeave(object sender, MouseEventArgs e)
+        private void AddFriendPath_MouseLeave(object sender, MouseEventArgs e)
         {
-            Finding1.Stroke = new SolidColorBrush(Color.FromArgb(255, 191, 188, 188));
-            Finding1.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+            AddFriendPath.Stroke = new SolidColorBrush(Color.FromArgb(255, 191, 188, 188));
+            AddFriendPath.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
         }
 
-        private void Path_MouseLeftButtonDown_2(object sender, MouseButtonEventArgs e)
+        private void AddFriendPath_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Finding1.Fill = new SolidColorBrush(Color.FromArgb(255, 101, 187, 29));
-            Finding1.Stroke = new SolidColorBrush(Color.FromArgb(255, 101, 187, 29));
-        }
-
-        private void Path_MouseLeftButtonUp_3(object sender, MouseButtonEventArgs e)
-        {
-            Finding1.Stroke = new SolidColorBrush(Color.FromArgb(255, 191, 188, 188));
-            Finding1.Fill = new SolidColorBrush(Color.FromArgb(0, 191, 188, 188));
-            new PopupWindow1().Show();
+            AddFriendPath.Fill = new SolidColorBrush(Color.FromArgb(255, 101, 187, 29));
+            AddFriendPath.Stroke = new SolidColorBrush(Color.FromArgb(255, 101, 187, 29));
         }
 
         private void SetButton_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -248,11 +231,6 @@ namespace FZChat.Client.View
             groupchatbutton.Fill = new SolidColorBrush(Color.FromArgb(255, 68, 168, 0));
         }
 
-        private void groupchatbutton_MouseLeftButtonUp_1(object sender, MouseButtonEventArgs e)
-        {
-            new CreatGroup().Show();
-        }
-
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
@@ -267,6 +245,7 @@ namespace FZChat.Client.View
         {
 
         }
+
     }
 }
 
