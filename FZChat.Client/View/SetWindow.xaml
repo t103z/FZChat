@@ -7,8 +7,10 @@
         xmlns:viewmodel="clr-namespace:FZChat.Client.ViewModel"
         mc:Ignorable="d"
         x:Name="SetWindowView"
-        Title="SetWindowView" Height="760" Width="600" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}" Visibility="Visible">
-    <Grid >
+        Title="SetWindowView" Height="781.754" Width="626.667" WindowStyle="None" 
+        AllowsTransparency="True" Background="{x:Null}" Visibility="Visible"
+        ResizeMode="NoResize">
+    <Grid Margin="0,0,-0.333,81" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="0*"/>
@@ -22,38 +24,30 @@
         <Grid.RowDefinitions>
         </Grid.RowDefinitions>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="58" Margin="245,6,0,0" TextWrapping="Wrap" Text="设  置" VerticalAlignment="Top" Width="108" FontSize="21.333" FontWeight="Bold" Grid.RowSpan="2" Foreground="White"/>
-        <GroupBox x:Name="groupBox" Header="账号设置" HorizontalAlignment="Left" Height="136" Margin="0,69,0,0" VerticalAlignment="Top" Width="598" FontSize="16" FontFamily="STXinwei" BorderThickness="0" Foreground="White">
+        <GroupBox x:Name="groupBox" Header="关于FZChat" HorizontalAlignment="Left" Height="136" Margin="0,69,0,0" VerticalAlignment="Top" Width="598" FontSize="16" FontFamily="STXinwei" BorderThickness="0" Foreground="White">
             <Grid HorizontalAlignment="Left" Height="108" Margin="108,0,0,0" VerticalAlignment="Top" Width="390">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="31*"/>
-                    <ColumnDefinition Width="71*"/>
                 </Grid.ColumnDefinitions>
-                <Image x:Name="image" HorizontalAlignment="Left" Height="91" Margin="10,7,0,0" VerticalAlignment="Top" Width="91" OpacityMask="#FFCDCDCD"/>
-                <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Height="30" Margin="16.5,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" Grid.Column="1" FontSize="16" Foreground="White"><Run Text="昵称"/><LineBreak/><Run/></TextBlock>
-                <TextBlock x:Name="textBlock2" Grid.Column="1" HorizontalAlignment="Left" Height="49" Margin="19,55,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="163" Foreground="White" FontSize="16"><Run Text="账户名"/><Run Text="："/></TextBlock>
+                <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Height="88" Margin="9,12,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="381" Foreground="White" FontSize="16"><Run Text="制作人：张欣阳，冯天煜"/><LineBreak/><Run Text="制作日期：2015/9/15"/><LineBreak/><Run Text="产品版本：FZChat v1.0"/><LineBreak/><Run Text="本产品仅供学习交流使用，禁止用作任何"/><Run Text="商业用途"/></TextBlock>
             </Grid>
         </GroupBox>
-        <GroupBox x:Name="groupBox1" Header="        通用" HorizontalAlignment="Left" Height="184" Margin="0,205,0,0" VerticalAlignment="Top" Width="580" FontSize="16" FontFamily="STXinwei" BorderThickness="0" BorderBrush="#FFD5DFE5" Foreground="White">
-            <Grid HorizontalAlignment="Left" Height="170" Margin="98,4,-2,-22" VerticalAlignment="Top" Width="472">
+        <GroupBox x:Name="groupBox1" Header="        通用" HorizontalAlignment="Left" Height="128" Margin="0,205,0,0" VerticalAlignment="Top" Width="580" FontSize="16" FontFamily="STXinwei" BorderThickness="0" BorderBrush="#FFD5DFE5" Foreground="White">
+            <Grid HorizontalAlignment="Left" Height="157" Margin="98,0,-2,0" VerticalAlignment="Top" Width="472">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="349*"/>
                     <ColumnDefinition Width="297*"/>
                 </Grid.ColumnDefinitions>
-                <CheckBox x:Name="checkBox" Content="开启新消息提示声音" HorizontalAlignment="Left" Height="38" 
-                          Margin="10,10,0,0" VerticalAlignment="Top" Width="307" FontSize="16" Foreground="White"
-                          IsChecked="{Binding NewMessageTellTalk}"/>
-                
-                <CheckBox x:Name="checkBox1" Content="有更新时自动升级" HorizontalAlignment="Left" Height="38" Margin="10,48,0,0" 
+
+                <CheckBox x:Name="checkBox1" Content="有更新时自动升级" HorizontalAlignment="Left" Height="38" Margin="10,14,0,0" 
                           VerticalAlignment="Top" Width="307" FontSize="16" Foreground="White"
-                          IsChecked="{Binding AutoUpDate}"/>
+                          IsChecked="{Binding AutoUpDate}" Grid.ColumnSpan="2"/>
                 <CheckBox x:Name="checkBox2_Copy" Content="保留聊天记录" HorizontalAlignment="Left" Height="38" 
-                          Margin="10,86,0,0" VerticalAlignment="Top" Width="307" FontSize="16" Foreground="White" Grid.ColumnSpan="2"
+                          Margin="10,52,0,0" VerticalAlignment="Top" Width="307" FontSize="16" Foreground="White" Grid.ColumnSpan="2"
                           IsChecked="{Binding SaveChatMessage}"/>
-                <Button x:Name="button1" Content="清空聊天记录" HorizontalAlignment="Left" Height="46" Margin="23,114,0,0" VerticalAlignment="Top" Width="180" Background="#00000000"  
-                        Grid.Column="1" FontSize="16" Foreground="White"  />
+                <Button x:Name="button1" Content="清空聊天记录" HorizontalAlignment="Left" Height="46" Margin="229,14,0,0" VerticalAlignment="Top" Width="180" Background="#00000000" FontSize="16" Foreground="White" Grid.ColumnSpan="2"  />
             </Grid>
         </GroupBox>
-        <GroupBox x:Name="groupBox2" Header="安全设置" HorizontalAlignment="Left" Height="122" Margin="0,389,0,0" VerticalAlignment="Top" Width="580" FontSize="16" FontFamily="STXinwei" BorderThickness="0" Foreground="White">
+        <GroupBox x:Name="groupBox2" Header="安全设置" HorizontalAlignment="Left" Height="122" Margin="0,338,0,0" VerticalAlignment="Top" Width="580" FontSize="16" FontFamily="STXinwei" BorderThickness="0" Foreground="White">
             <Grid HorizontalAlignment="Left" Height="90" Margin="102,2,-2,0" VerticalAlignment="Top" Width="468">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="54*"/>
@@ -62,10 +56,10 @@
                 <CheckBox x:Name="checkBox4" Content="记住密码" HorizontalAlignment="Left" Height="46" Margin="6,11,0,0" 
                           VerticalAlignment="Top" Width="344"  Grid.RowSpan="2" FontSize="16" Foreground="White"
                            IsChecked="{Binding SavePassword}"/>
-                <Button x:Name="button1_Copy" Content="修改密码" HorizontalAlignment="Left" Height="46" Margin="310,44,0,0" VerticalAlignment="Top" Width="144" Background="Transparent" FontSize="16" Grid.RowSpan="2" Foreground="White"/>
+                <Button x:Name="button1_Copy" Content="修改密码" HorizontalAlignment="Left" Height="46" Margin="306,0,0,0" VerticalAlignment="Top" Width="144" Background="Transparent" FontSize="16" Grid.RowSpan="2" Foreground="White" MouseDown="button1_Copy_MouseDown" Click="button1_Copy_Click"/>
             </Grid>
         </GroupBox>
-        <GroupBox x:Name="groupBox3" Header="    快捷键" HorizontalAlignment="Left" Height="160" Margin="0,516,0,0" VerticalAlignment="Top" Width="570" BorderThickness="0" FontSize="16" FontFamily="STXinwei" Foreground="White">
+        <GroupBox x:Name="groupBox3" Header="    快捷键" HorizontalAlignment="Left" Height="160" Margin="0,446,0,0" VerticalAlignment="Top" Width="570" BorderThickness="0" FontSize="16" FontFamily="STXinwei" Foreground="White">
             <Grid HorizontalAlignment="Left" Height="150" Margin="97,0,-2,-14" VerticalAlignment="Top" Width="463">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
@@ -76,13 +70,13 @@
                 <TextBlock x:Name="textBlocky" HorizontalAlignment="Left" Height="40" Margin="10,10,0,0" TextWrapping="Wrap" Text="截取屏幕:" VerticalAlignment="Top" Width="163" Grid.Row="1" FontSize="16"/>
                 <TextBlock x:Name="textBlockz" HorizontalAlignment="Left" Height="40" Margin="10,10,0,0" TextWrapping="Wrap" Text="打开主界面:" VerticalAlignment="Top" Width="163" Grid.Row="2" FontSize="16"/>
 
-                <Button x:Name="buttonx" Content="Alt + A" HorizontalAlignment="Left" Height="42" Margin="262,1,0,0" VerticalAlignment="Top" Width="195" Background="#00000000"  Grid.Row="1" Foreground="White"/>
+                <Button x:Name="buttonx" Content="Alt + PrtSc" HorizontalAlignment="Left" Height="42" Margin="262,1,0,0" VerticalAlignment="Top" Width="195" Background="#00000000"  Grid.Row="1" Foreground="White"/>
                 <Button x:Name="buttony" Content="Ctrl + Alt + W" HorizontalAlignment="Left" Height="43" Margin="262,0,0,0" VerticalAlignment="Top" Width="195" Background="#00000000"  Grid.Row="2" Foreground="White"/>
-                <Button x:Name="buttonx_Copy" Content="Ctrl + Enter" HorizontalAlignment="Left" Height="42" Margin="262,1,0,0" VerticalAlignment="Top" Width="195" Background="#00000000" Foreground="White"/>
+                <Button x:Name="buttonx_Copy" Content="Enter" HorizontalAlignment="Left" Height="42" Margin="262,1,0,0" VerticalAlignment="Top" Width="195" Background="#00000000" Foreground="White"/>
             </Grid>
         </GroupBox>
         <TextBlock x:Name="SetWindowClose" HorizontalAlignment="Left" Height="34" Margin="564,0,0,0" TextWrapping="Wrap" Text=" ×" VerticalAlignment="Top" Width="36" FontWeight="Bold" FontSize="21.333" Background="#00000000" MouseEnter="SetWindowClose_MouseEnter" MouseLeave="SetWindowClose_MouseLeave" MouseLeftButtonDown="SetWindowClose_MouseLeftButtonDown" MouseLeftButtonUp="SetWindowClose_MouseLeftButtonUp" Foreground="White"/>
-        <Button x:Name="button" Content="关闭窗口" HorizontalAlignment="Left" Height="46" Margin="415,692,0,0" VerticalAlignment="Top" Width="144" Background="#00000000" FontSize="16"  Foreground="White" Click="button_Click" FontFamily="STXinwei" />
+        <Button x:Name="button" Content="关闭窗口" HorizontalAlignment="Left" Height="46" Margin="415,617,0,0" VerticalAlignment="Top" Width="144" Background="#00000000" FontSize="16"  Foreground="White" Click="button_Click" FontFamily="STXinwei" />
         <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="46" VerticalAlignment="Top" Width="557" Background="#00000000" MouseLeftButtonDown="Border_MouseLeftButtonDown" Margin="2,0,0,0"/>
     </Grid>
 </Window>

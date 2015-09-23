@@ -40,6 +40,8 @@ namespace FZChat.Client.ViewModel
         public ICommand ChatWithUserCommand { get; set; }
         //发送聊天内容命令
         public ICommand SendMessageCommand { get; set; }
+        //选择聊天改变命令
+        public ICommand ChatSelectionChangedCommand { get; set; }
         #endregion
 
         #region Properties
@@ -175,6 +177,17 @@ namespace FZChat.Client.ViewModel
             ChatWithUserCommand = new CustomCommand(ChatWithUser, CanChatWithUser);
             SendMessageCommand = new CustomCommand(SendMessage, CanSendMessage);
             CreateGroupCommand = new CustomCommand(OpenCreateGroup, CanOpenCreateGroup);
+            ChatSelectionChangedCommand = new CustomCommand(ChangeChatSelection, CanChangeChatSelection);
+        }
+
+        private bool CanChangeChatSelection(object obj)
+        {
+            return true;
+        }
+
+        private void ChangeChatSelection(object obj)
+        {
+            TextEntered = string.Empty;
         }
 
         private bool CanOpenCreateGroup(object obj)
@@ -216,7 +229,7 @@ namespace FZChat.Client.ViewModel
                 dataService.SendChatMessage(msg);
             }
             
-            textEntered = string.Empty;
+            TextEntered = string.Empty;
         }
         //属于命令ChatWithUserCommand
         private bool CanChatWithUser(object obj)
@@ -253,7 +266,7 @@ namespace FZChat.Client.ViewModel
             //若已存在，则进入聊天
             if (ExistChat)
             {
-                selectedChat = (from c in Chats
+                SelectedChat = (from c in Chats
                                 where c.Name == selectedUser.NickName
                                 select c).Single();
             }
@@ -262,7 +275,7 @@ namespace FZChat.Client.ViewModel
             {
                 PrivateChat newPrivateChat = new PrivateChat(selectedUser);
                 Chats.Add(newPrivateChat);
-                selectedChat = newPrivateChat;
+                SelectedChat = newPrivateChat;
                 dataService.GetAllChats();
                 Utilities.Messenger.Default.Send(new UpdateChatsMessage(Chats));
             }

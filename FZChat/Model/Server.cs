@@ -92,7 +92,7 @@ namespace FZChat.Model
             {
                 string userName = msg.Sender;
                 string password = msg.Content;
-                if (CheckIdentity(userName, password))
+                if (CheckIdentity(userName, password) && !onlineUsers.Contains(userName))
                 {
                     //回应ok
                     RespondOK(e);
@@ -106,7 +106,8 @@ namespace FZChat.Model
                     //发送用户群聊列表
                     SendGroupChatList(e, userName);
                     //发送用户在线好友列表，发送给在线好友JOIN信息
-                    SendOnlineFriendList(e, userName);
+                    //SendOnlineFriendList(e, userName);
+                    Thread.Sleep(200);
                     //发送用户离线时收到的信息
                     SendOfflineMessage(e, userName);
                     //触发在线用户改变事件
@@ -325,7 +326,7 @@ namespace FZChat.Model
                 }
                 Message msg = new Message(MessageType.CREATECHAT, "SERVER", sb.ToString());
                 FowardTo(e, userName, msg);
-                Thread.Sleep(300);
+                Thread.Sleep(400);
             }
         }
 
@@ -406,7 +407,7 @@ namespace FZChat.Model
                 foreach (Message offlineMessage in offlineMessages)
                 {
                     receiver.SendMessage(offlineMessage, e.StreamToRemote);
-                    Thread.Sleep(100);   //防止流写入发生连续写入错误
+                    Thread.Sleep(400);   //防止流写入发生连续写入错误
                 }
             }
         }

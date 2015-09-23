@@ -20,12 +20,19 @@ namespace FZChat.Client.Model
         ERROR
     }
 
+    /// <summary>
+    /// 本类为服务端核心用户逻辑类，负责处理收到的消息，以及发送新的消息
+    /// </summary>
     public class Client
     {
-        private MessageSender sender;
-        private Message currentResponse = new Message(MessageType.ERROR, new DateTime());
-        private List<string> onlineFriendNames;
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived
+        #region Fields
+        private MessageSender   sender;
+        private Message         currentResponse = new Message(MessageType.ERROR, new DateTime());
+        private List<string>    onlineFriendNames;
+        #endregion
+
+        #region Events
+        public  event EventHandler<MessageReceivedEventArgs>    MessageReceived
         {
             add
             {
@@ -36,7 +43,7 @@ namespace FZChat.Client.Model
                 sender.MessageReceived -= value;
             }
         }
-        public event EventHandler<ConnectionLostEventArgs> ConnectionLost
+        public  event EventHandler<ConnectionLostEventArgs>     ConnectionLost
         {
             add
             {
@@ -47,21 +54,31 @@ namespace FZChat.Client.Model
                 sender.ConnectionLost -= value;
             }
         }
+        public  event EventHandler<GroupMessageEventArgs>       GroupMessageReceived;
+        public  event EventHandler<PrivateMessageEventArgs>     PrivateMessageReceived;
+        public  event EventHandler<OnlineUserChangedEventArgs>  OnlineUserChanged;
+        public  event EventHandler<FriendInformationEventArgs>  FriendInformationReceived;
+        public  event EventHandler<FriendRequestEventArgs>      FriendRequestReceived;
+        public  event EventHandler<NewChatEventArgs>            NewChatCreated;
+        public  event EventHandler<UserLeaveChatEventArgs>      UserLeaveChat;
+        #endregion
 
-        public event EventHandler<GroupMessageEventArgs> GroupMessageReceived;
-        public event EventHandler<PrivateMessageEventArgs> PrivateMessageReceived;
-        public event EventHandler<OnlineUserChangedEventArgs> OnlineUserChanged;
-        public event EventHandler<FriendInformationEventArgs> FriendInformationReceived;
-        public event EventHandler<FriendRequestEventArgs> FriendRequestReceived;
-        public event EventHandler<NewChatEventArgs> NewChatCreated;
-        public event EventHandler<UserLeaveChatEventArgs> UserLeaveChat;
-        
+        #region Constructor
+        //构造函数
         public Client()
         {
             sender = new MessageSender();
             sender.MessageReceived += ProcessMessage;
             onlineFriendNames = new List<string>();
         }
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// 对收到信息事件的处理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ProcessMessage(object sender, MessageReceivedEventArgs e)
         {
             string orginalString = e.Content;
@@ -310,7 +327,9 @@ namespace FZChat.Client.Model
             }
             return msg;
         }
+        #endregion
 
+        #region Public Methods
         public ResponseType Send(Message msg)
         {
             sender.SendMessage(msg);
@@ -419,9 +438,11 @@ namespace FZChat.Client.Model
         {
             return sender.Connect(ip, port);
         }
+
         public void SignOut()
         {
             sender.SignOut();
         }
+        #endregion
     }
 }

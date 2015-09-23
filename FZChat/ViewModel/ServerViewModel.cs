@@ -20,7 +20,7 @@ namespace FZChat.ViewModel
     public class ServerViewModel : Window, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;   //实现INotifyPropertyChanged接口
-        private ObservableCollection<OnlineUser> onlineUsers;       //对应在线用户列表
+        private ObservableCollection<string> onlineUsers;       //对应在线用户列表
         private ObservableCollection<string> msgStrings;            //对应消息列表
         private int portNumber;                                     //监听的端口号
         private bool listenStarted;
@@ -54,7 +54,7 @@ namespace FZChat.ViewModel
             }
         }
 
-        public ObservableCollection<OnlineUser> OnlineUsers
+        public ObservableCollection<string> OnlineUsers
         {
             get
             {
@@ -87,7 +87,7 @@ namespace FZChat.ViewModel
             PortNumber = 8500;                                      //设置默认端口号
             listenStarted = false;
             msgStrings = new ObservableCollection<string>();
-            onlineUsers = new ObservableCollection<OnlineUser>();
+            onlineUsers = new ObservableCollection<string>();
             LoadCommands();                                         //初始化命令
         }
 
@@ -97,11 +97,11 @@ namespace FZChat.ViewModel
             if (e.Type.ToLower() == "online")
             {
                 //ObservableCollection为线程安全类型，故需要调用UI所在线程对其进行更改
-                this.Dispatcher.Invoke(new Action(() => onlineUsers.Add(e.User)));
+                this.Dispatcher.Invoke(new Action(() => onlineUsers.Add(e.UserName)));
             }
             else if (e.Type.ToLower() == "offline")
             {
-                this.Dispatcher.Invoke(new Action(() => onlineUsers.Remove(e.User)));
+                this.Dispatcher.Invoke(new Action(() => onlineUsers.Remove(e.UserName)));
             }
         }
 

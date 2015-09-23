@@ -24,7 +24,6 @@ namespace FZChat.Client.ViewModel
         public  string      UserName { get; set; }
         public  string      Password { get; set; }
         public  bool        RememberPassword { get; set; }
-        public  bool        AutoLogIn { get; set; }
         public  int         PortNumber { get; set; }
         public  string      IpAddress { get; set; }
     }
@@ -35,6 +34,7 @@ namespace FZChat.Client.ViewModel
         private Action      _closeAction;
         private SavedLogInOptions _loginOptions;
         private Service.ClientDataService dataService;
+        private bool isConnected;
         //private bool IsConnected = false;
 
         private string      userName;
@@ -103,18 +103,6 @@ namespace FZChat.Client.ViewModel
             }
         }
 
-        private bool        autoLogIn;
-
-        public  bool        AutoLogIn
-        {
-            get { return autoLogIn; }
-            set
-            {
-                autoLogIn = value;
-                OnPropertyChanged("AutoLogIn");
-            }
-        }
-
         public ICommand CloseWindowCommand { get; set; }    //关闭窗口命令
         public ICommand LogInCommand { get; set; }          //登录命令
         public ICommand RegisterCommand { get; set; }       //注册命令
@@ -127,6 +115,16 @@ namespace FZChat.Client.ViewModel
             LoadCommands();
             Utilities.Messenger.Default.Register<Messages.IPChangedMessage>(this, OnIpChanged);
             dataService = new Service.ClientDataService();
+            isConnected = false;
+            Utilities.Messenger.Default.Register<Messages.ConnectionChangedMessage>(this, OnConnectionChanged);
+        }
+
+        private void OnConnectionChanged(ConnectionChangedMessage obj)
+        {
+            if (obj.state == "online")
+            {
+                isConnected = true;
+            }
         }
 
         private void OnIpChanged(IPChangedMessage obj)
@@ -148,7 +146,6 @@ namespace FZChat.Client.ViewModel
                     }
                     UserName = _loginOptions.UserName;
                     Password = _loginOptions.Password;
-                    AutoLogIn = _loginOptions.AutoLogIn;
                     RememberPassword = _loginOptions.RememberPassword;
                     IpAddress = _loginOptions.IpAddress;
                     PortNumber = _loginOptions.PortNumber;
@@ -161,7 +158,6 @@ namespace FZChat.Client.ViewModel
                 {
                     UserName = null;
                     Password = null;
-                    AutoLogIn = false;
                     RememberPassword = false;
                     IpAddress = "127.0.0.1";
                     PortNumber = 8500;
@@ -183,7 +179,7 @@ namespace FZChat.Client.ViewModel
 
         private void OpenRegisterWindow(object obj)
         {
-            Window registerWindow = new Register(dataService);
+            Window registerWindow = new Register(dataService, isConnected, ipAddress, portNumber);
             registerWindow.Show();
         }
 
@@ -201,13 +197,17 @@ namespace FZChat.Client.ViewModel
 
         private void LogIn(object obj)
         {
-            if (!dataService.Connect(IPAddress.Parse(ipAddress),portNumber))
+            if (!isConnected)
             {
-                MessageBox.Show("无法连接至服务器");
-            }
-            else
-            {
-                //IsConnected = true;
+                if (!dataService.Connect(IPAddress.Parse(ipAddress), portNumber))
+                {
+                    MessageBox.Show("无法连接至服务器");
+                    isConnected = false;
+                }
+                else
+                {
+                    isConnected = true;
+                }
             }
             string passwordEncripted = GetMD5();
             Message logInMessage = new Message(MessageType.LOGIN, DateTime.Now, UserName, passwordEncripted);
@@ -236,7 +236,6 @@ namespace FZChat.Client.ViewModel
             {
                 UserName = userName,
                 Password = password,
-                AutoLogIn = autoLogIn,
                 RememberPassword = rememberPassword,
                 IpAddress = ipAddress,
                 PortNumber = portNumber
@@ -256,6 +255,7 @@ namespace FZChat.Client.ViewModel
         private void CloseWindow(object obj)
         {
             SaveSettings();
+            Utilities.Messenger.Default.Send<Messages.ShutDownMessage>(new ShutDownMessage());
             this._closeAction.Invoke();
         }
 

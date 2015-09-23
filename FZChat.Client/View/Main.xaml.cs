@@ -31,6 +31,9 @@ namespace FZChat.Client.View
             InitializeComponent();
             this.DataContext = new MainViewModel(service, this.Close);
             Messenger.Default.Register<ViewModel.Messages.ShutDownMessage>(this, OnShutDownMessageReceived);
+            Grid1.Visibility = Visibility.Hidden;
+            Grid2.Visibility = Visibility.Hidden;
+            FriendInfromationGrid.Visibility = Visibility.Hidden;
         }
 
         private void OnShutDownMessageReceived(ShutDownMessage obj)
@@ -59,6 +62,8 @@ namespace FZChat.Client.View
             Grid2.Visibility = Visibility.Visible;
             ChatGrid.Visibility = Visibility.Visible;
             FriendInfromationGrid.Visibility = Visibility.Hidden;
+            ChatButton.Fill = new SolidColorBrush(Color.FromArgb(0, 101, 187, 29));
+            ChatButton.Stroke = new SolidColorBrush(Color.FromArgb(255, 191, 188, 188));
         }
 
         private void Path_MouseLeftButtonUp_1(object sender, MouseButtonEventArgs e)
@@ -67,6 +72,8 @@ namespace FZChat.Client.View
             Grid1.Visibility = Visibility.Visible;
             ChatGrid.Visibility = Visibility.Hidden;
             FriendInfromationGrid.Visibility = Visibility.Visible;
+            LinkmanButton.Fill = new SolidColorBrush(Color.FromArgb(0, 101, 187, 29));
+            LinkmanButton.Stroke = new SolidColorBrush(Color.FromArgb(255, 191, 188, 188));
         }
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)

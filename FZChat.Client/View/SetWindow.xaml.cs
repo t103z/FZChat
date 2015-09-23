@@ -33,7 +33,7 @@ namespace FZChat.Client.View
 
         private void label_MouseEnter(object sender, MouseEventArgs e)
         {
-           
+
         }
 
         private void SetWindowClose_MouseEnter(object sender, MouseEventArgs e)
@@ -70,6 +70,16 @@ namespace FZChat.Client.View
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
+        }
+
+        private void button1_Copy_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            new FindPassword().Show();
+        }
+
+        private void button1_Copy_Click(object sender, RoutedEventArgs e)
+        {
+            new FindPassword().Show();
         }
     }
 }

@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using System.Windows.Navigation;
 using System.Diagnostics;
 using FZChat.Client.ViewModel;
+using FZChat.Client.ViewModel.Utilities;
+using FZChat.Client.ViewModel.Messages;
 
 namespace FZChat.Client.View
 {
@@ -27,6 +29,12 @@ namespace FZChat.Client.View
         {
             InitializeComponent();
             this.DataContext = new MainWindowViewModel(this.Close);
+            Messenger.Default.Register<ShutDownMessage>(this, OnShutDown);
+        }
+
+        private void OnShutDown(ShutDownMessage obj)
+        {
+            Environment.Exit(0);
         }
 
         private void checkBox_Checked(object sender, RoutedEventArgs e)

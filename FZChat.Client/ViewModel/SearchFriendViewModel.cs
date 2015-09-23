@@ -150,11 +150,18 @@ namespace FZChat.Client.ViewModel
             {
                 MessageBox.Show("没有找到用户");
             }
+            else if (found.Count == 1 && found.First().UserName == dataService.UserName)
+            {
+                MessageBox.Show("没有找到用户");
+            }
             else
             {
                 foreach (var user in found)
                 {
-                    FriendsFound.Add(user);
+                    if (user.UserName != dataService.UserName)
+                    {
+                        FriendsFound.Add(user);
+                    }
                 }
             }
         }

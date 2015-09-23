@@ -24,7 +24,7 @@ namespace FZChat.Client.View
         public CreateGroup(ClientDataService service)
         {
             InitializeComponent();
-            this.DataContext = new CreateGroupViewModel(service);
+            this.DataContext = new CreateGroupViewModel(service, this.Close);
         }
 
         private void textBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

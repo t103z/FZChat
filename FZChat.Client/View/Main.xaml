@@ -63,7 +63,7 @@
                         </TextBox>
                     </Border>
                 </Grid>
-                <Path Fill="#FF2A4F4F" Stroke="Black" Margin="10,9.5,189.877,10" Stretch="Fill" Grid.Row="1" StrokeThickness="0">
+                <Path Fill="#FF2A4F4F" Stroke="Black" Margin="12.291,11,192.168,13.5" Stretch="Fill" Grid.Row="1" StrokeThickness="0">
                     <Path.Data>
                         <GeometryGroup>
                             <EllipseGeometry Center="20,40" RadiusX="20" RadiusY="40"/>
@@ -185,7 +185,12 @@
 
             <Grid x:Name="Grid2" Background="#991D2A2A" Grid.Row="1" Visibility="{Binding ChatListVisibility, Mode=TwoWay}">
                 <ListView x:Name="ChatListView" HorizontalAlignment="Left" Height="469" VerticalAlignment="Top" Width="228" BorderThickness="0,0,1,0" 
-                            Background="{x:Null}" ItemsSource="{Binding Chats}" SelectedItem="{Binding SelectedChat,Mode=TwoWay}">
+                            Background="{x:Null}" ItemsSource="{Binding Chats}" SelectedItem="{Binding SelectedChat,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding ChatSelectionChangedCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid Height="60" Width="210" Background="{x:Null}">
@@ -211,6 +216,9 @@
                 <Grid HorizontalAlignment="Left" Height="580" Margin="10,10,0,0" VerticalAlignment="Top" Width="604" >
 
                     <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" Height="158" Margin="0,115,0,0" VerticalAlignment="Top" Width="158">
+                        <Border.Background>
+                            <ImageBrush ImageSource="resource/head.jpg"/>
+                        </Border.Background>
                     </Border>
 
                     <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Height="34" Margin="180,360,0,0" TextWrapping="Wrap" VerticalAlignment="Top" 
@@ -219,7 +227,7 @@
                                Foreground="Blue" Text="年   龄" />
                     <TextBlock x:Name="textBlock3_Copy1" HorizontalAlignment="Left" Height="34" Margin="180,428,0,0" TextWrapping="Wrap" Text="Email" VerticalAlignment="Top" Width="77" FontSize="21.333" Foreground="Blue"/>
                     <TextBlock x:Name="textBlock2" HorizontalAlignment="Center" Height="36" Margin="0,298,0,0" TextWrapping="Wrap" 
-                               Text="{Binding SelectedUser.NickName, Mode=TwoWay}" VerticalAlignment="Top" Width="200" FontSize="28" FontWeight="Bold"/>
+                               Text="{Binding SelectedUser.NickName, Mode=TwoWay}" VerticalAlignment="Top" Width="200" FontSize="28" FontWeight="Bold" TextAlignment="Center"/>
                     <TextBlock FontSize="20" Height="25" x:Name="RemarkText" VerticalAlignment="Bottom" Width="200" 
         				  Margin="280,0,162,191" Text="{Binding SelectedUser.UserName, Mode=TwoWay}" />
                     <TextBlock Margin="280,398,0,0" x:Name="FzNumber" HorizontalAlignment="Left" Height="25" TextWrapping="Wrap" 
@@ -274,8 +282,8 @@
                                 <Label Grid.Row="1" x:Name="LogSendTimeLabel" HorizontalAlignment="Center" VerticalAlignment="Center"
                            Content="{Binding Path=Time}" FontSize="16"/>
                             </WrapPanel>
-                            <Border BorderBrush="Black" Background="Violet" BorderThickness="0" HorizontalAlignment="Left" Grid.Row="1" 
-                                    VerticalAlignment="Top" CornerRadius="5" MaxWidth="400" >
+                            <Border BorderBrush="Black" Background="#B215AFFC" BorderThickness="0" HorizontalAlignment="Left" Grid.Row="1" 
+                                    VerticalAlignment="Top" CornerRadius="5" MaxWidth="400" Padding="2">
                                 <TextBlock Grid.Row="2" x:Name="LogContentTextBlock" HorizontalAlignment="Center"
                                Text="{Binding Path=Content}" TextWrapping="Wrap"  FontSize="16"/>
                             </Border>
@@ -289,17 +297,15 @@
                     <RowDefinition Height="35*"/>
                     <RowDefinition Height="8*"/>
                 </Grid.RowDefinitions>
-                <TextBox x:Name="chatTextBox" HorizontalAlignment="Left" Height="134" TextWrapping="Wrap" 
-                         VerticalAlignment="Top" Width="616" Background="Transparent" BorderThickness="0" 
+                <TextBox x:Name="chatTextBox" HorizontalAlignment="Left" Height="134" TextWrapping="Wrap" Margin="12,0,8,0" 
+                         VerticalAlignment="Top" Width="600" Background="Transparent" BorderThickness="0" FontSize="14"
                          Grid.Row="1" Text="{Binding TextEntered, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+
                     <TextBox.InputBindings>
-                        <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
+                        <KeyBinding Key="Enter" Command="{Binding SendMessageCommand}"/>
                     </TextBox.InputBindings>
                 </TextBox>
-                <!--<Border x:Name="CloseWindow1" BorderBrush="#FFDADADA" BorderThickness="2" HorizontalAlignment="Right" Height="28" Margin="0,135,120,0" Grid.Row="1" VerticalAlignment="Top" Width="90" Background="#FFECECEC" MouseEnter="Border_MouseEnter_1" MouseLeave="CloseWindow1_MouseLeave" MouseLeftButtonDown="CloseWindow1_MouseLeftButtonDown" MouseLeftButtonUp="CloseWindow1_MouseLeftButtonUp" Grid.RowSpan="2">
-                    <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="22" Margin="16,0,0,0" TextWrapping="Wrap" Text="关闭(C)" 
-        				VerticalAlignment="Bottom" Width="61" FontSize="16" Foreground="Gray"/>
-                </Border>-->
                 <Border x:Name="SendMessage" BorderBrush="#FFDADADA" BorderThickness="2" HorizontalAlignment="Right" Height="28" Margin="0,135,5,0" 
                         Grid.Row="1" VerticalAlignment="Top" Width="90" Background="#FFECECEC" 
                         MouseEnter="Border_MouseEnter_2" MouseLeave="SendMessage_MouseLeave" MouseLeftButtonDown="SendMessage_MouseLeftButtonDown" Grid.RowSpan="2" >
@@ -314,8 +320,8 @@
                 </Border>
             </Grid>
         </Grid>
-        
+
         <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="788" MouseDown="Border_MouseDown" Background="#00E2E2E2"/>
-        
+
     </Grid>
 </Window>
